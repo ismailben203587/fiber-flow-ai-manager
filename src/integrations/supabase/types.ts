@@ -9,13 +9,204 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      customer_complaints: {
+        Row: {
+          client_name: string
+          complaint_number: string
+          complaint_type: string
+          created_at: string | null
+          description: string | null
+          id: string
+          priority: string | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          client_name: string
+          complaint_number: string
+          complaint_type: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          priority?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          client_name?: string
+          complaint_number?: string
+          complaint_type?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          priority?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      ftth_orders: {
+        Row: {
+          ai_analysis: Json | null
+          assigned_msan_id: string | null
+          assigned_pco_id: string | null
+          client_address: string
+          client_email: string | null
+          client_name: string
+          client_phone: string | null
+          created_at: string | null
+          distance_to_msan: number | null
+          distance_to_pco: number | null
+          feasibility_report: Json | null
+          feasibility_status: string | null
+          id: string
+          order_number: string
+          service_type: string | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          ai_analysis?: Json | null
+          assigned_msan_id?: string | null
+          assigned_pco_id?: string | null
+          client_address: string
+          client_email?: string | null
+          client_name: string
+          client_phone?: string | null
+          created_at?: string | null
+          distance_to_msan?: number | null
+          distance_to_pco?: number | null
+          feasibility_report?: Json | null
+          feasibility_status?: string | null
+          id?: string
+          order_number: string
+          service_type?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          ai_analysis?: Json | null
+          assigned_msan_id?: string | null
+          assigned_pco_id?: string | null
+          client_address?: string
+          client_email?: string | null
+          client_name?: string
+          client_phone?: string | null
+          created_at?: string | null
+          distance_to_msan?: number | null
+          distance_to_pco?: number | null
+          feasibility_report?: Json | null
+          feasibility_status?: string | null
+          id?: string
+          order_number?: string
+          service_type?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ftth_orders_assigned_msan_id_fkey"
+            columns: ["assigned_msan_id"]
+            isOneToOne: false
+            referencedRelation: "msan_equipment"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ftth_orders_assigned_pco_id_fkey"
+            columns: ["assigned_pco_id"]
+            isOneToOne: false
+            referencedRelation: "pco_equipment"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      msan_equipment: {
+        Row: {
+          address: string
+          capacity: number
+          created_at: string | null
+          id: string
+          latitude: number | null
+          longitude: number | null
+          name: string
+          status: string | null
+          updated_at: string | null
+          used_capacity: number
+        }
+        Insert: {
+          address: string
+          capacity?: number
+          created_at?: string | null
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          name: string
+          status?: string | null
+          updated_at?: string | null
+          used_capacity?: number
+        }
+        Update: {
+          address?: string
+          capacity?: number
+          created_at?: string | null
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          name?: string
+          status?: string | null
+          updated_at?: string | null
+          used_capacity?: number
+        }
+        Relationships: []
+      }
+      pco_equipment: {
+        Row: {
+          address: string
+          capacity: number
+          created_at: string | null
+          id: string
+          latitude: number | null
+          longitude: number | null
+          name: string
+          status: string | null
+          updated_at: string | null
+          used_capacity: number
+        }
+        Insert: {
+          address: string
+          capacity?: number
+          created_at?: string | null
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          name: string
+          status?: string | null
+          updated_at?: string | null
+          used_capacity?: number
+        }
+        Update: {
+          address?: string
+          capacity?: number
+          created_at?: string | null
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          name?: string
+          status?: string | null
+          updated_at?: string | null
+          used_capacity?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      calculate_distance: {
+        Args: { lat1: number; lon1: number; lat2: number; lon2: number }
+        Returns: number
+      }
     }
     Enums: {
       [_ in never]: never
