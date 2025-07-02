@@ -2,12 +2,19 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CommercialStats from "@/components/CommercialStats";
 import CommercialCommands from "@/components/CommercialCommands";
+import DashboardNavigation from "@/components/DashboardNavigation";
 import { Building2, Users, ShoppingCart } from "lucide-react";
 
-const CommercialDashboard = () => {
+interface CommercialDashboardProps {
+  onGoHome: () => void;
+}
+
+const CommercialDashboard = ({ onGoHome }: CommercialDashboardProps) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-cyan-50">
       <div className="container mx-auto p-6">
+        <DashboardNavigation onGoHome={onGoHome} title="Espace Commercial" />
+        
         <div className="mb-8">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent mb-2">
             Smart Telecom - Commercial

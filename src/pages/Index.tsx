@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,12 +8,16 @@ import TechnicalDashboard from "./TechnicalDashboard";
 const Index = () => {
   const [currentDashboard, setCurrentDashboard] = useState<'home' | 'commercial' | 'technical'>('home');
 
+  const handleGoHome = () => {
+    setCurrentDashboard('home');
+  };
+
   if (currentDashboard === 'commercial') {
-    return <CommercialDashboard />;
+    return <CommercialDashboard onGoHome={handleGoHome} />;
   }
 
   if (currentDashboard === 'technical') {
-    return <TechnicalDashboard />;
+    return <TechnicalDashboard onGoHome={handleGoHome} />;
   }
 
   return (
