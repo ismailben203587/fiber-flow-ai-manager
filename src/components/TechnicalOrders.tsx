@@ -6,6 +6,14 @@ import { AlertTriangle, Eye, CheckCircle, XCircle } from "lucide-react";
 import { useFTTHOrders, useUpdateFTTHOrder } from "@/hooks/useOrders";
 import { useToast } from "@/hooks/use-toast";
 
+// Type for AI Analysis structure
+interface AIAnalysis {
+  score?: number;
+  riskLevel?: 'low' | 'medium' | 'high';
+  factors?: string[];
+  recommendations?: string[];
+}
+
 const TechnicalOrders = () => {
   const { data: orders = [], isLoading: ordersLoading } = useFTTHOrders();
   const updateOrder = useUpdateFTTHOrder();
@@ -73,9 +81,10 @@ const TechnicalOrders = () => {
   };
 
   const getRiskBadge = (aiAnalysis: any) => {
-    if (!aiAnalysis) return null;
+    if (!aiAnalysis || typeof aiAnalysis !== 'object') return null;
     
-    const riskLevel = aiAnalysis.riskLevel;
+    const analysis = aiAnalysis as AIAnalysis;
+    const riskLevel = analysis.riskLevel;
     switch (riskLevel) {
       case 'low':
         return <Badge className="bg-green-500/20 text-green-200">Risque Faible</Badge>;
@@ -86,6 +95,11 @@ const TechnicalOrders = () => {
       default:
         return null;
     }
+  };
+
+  const parseAIAnalysis = (aiAnalysis: any): AIAnalysis | null => {
+    if (!aiAnalysis || typeof aiAnalysis !== 'object') return null;
+    return aiAnalysis as AIAnalysis;
   };
 
   return (
@@ -106,121 +120,125 @@ const TechnicalOrders = () => {
             </div>
           ) : (
             <div className="space-y-4">
-              {technicalOrders.map((order) => (
-                <div key={order.id} className="bg-slate-700/50 border border-slate-600/50 rounded-lg p-4">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-4 mb-2">
-                        <h3 className="font-semibold text-blue-100">{order.order_number}</h3>
-                        {getStatusBadge(order)}
-                        {getRiskBadge(order.ai_analysis)}
-                      </div>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                        <div>
-                          <p className="text-blue-200">
-                            <strong>Client:</strong> {order.client_name}
-                          </p>
-                          <p className="text-blue-300">
-                            <strong>Adresse:</strong> {order.client_address}
-                          </p>
-                          {order.client_phone && (
-                            <p className="text-blue-300">
-                              <strong>Téléphone:</strong> {order.client_phone}
-                            </p>
-                          )}
+              {technicalOrders.map((order) => {
+                const aiAnalysis = parseAIAnalysis(order.ai_analysis);
+                
+                return (
+                  <div key={order.id} className="bg-slate-700/50 border border-slate-600/50 rounded-lg p-4">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-4 mb-2">
+                          <h3 className="font-semibold text-blue-100">{order.order_number}</h3>
+                          {getStatusBadge(order)}
+                          {getRiskBadge(order.ai_analysis)}
                         </div>
                         
-                        <div>
-                          {order.distance_to_pco && (
-                            <p className="text-blue-300">
-                              <strong>Distance PCO:</strong> {order.distance_to_pco.toFixed(2)} km
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                          <div>
+                            <p className="text-blue-200">
+                              <strong>Client:</strong> {order.client_name}
                             </p>
-                          )}
-                          {order.distance_to_msan && (
                             <p className="text-blue-300">
-                              <strong>Distance MSAN:</strong> {order.distance_to_msan.toFixed(2)} km
+                              <strong>Adresse:</strong> {order.client_address}
                             </p>
-                          )}
-                          {order.ai_analysis?.score && (
-                            <p className="text-blue-300">
-                              <strong>Score IA:</strong> {order.ai_analysis.score}/100
-                            </p>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Analyse IA */}
-                      {order.ai_analysis && (
-                        <div className="mt-4 p-3 bg-slate-600/30 rounded border border-slate-500/30">
-                          <h4 className="font-medium text-blue-200 mb-2">Analyse IA</h4>
+                            {order.client_phone && (
+                              <p className="text-blue-300">
+                                <strong>Téléphone:</strong> {order.client_phone}
+                              </p>
+                            )}
+                          </div>
                           
-                          {order.ai_analysis.factors && order.ai_analysis.factors.length > 0 && (
-                            <div className="mb-3">
-                              <p className="text-xs font-medium text-yellow-200 mb-1">Facteurs identifiés:</p>
-                              <ul className="space-y-1">
-                                {order.ai_analysis.factors.map((factor: string, index: number) => (
-                                  <li key={index} className="text-xs text-yellow-300 flex items-start gap-1">
-                                    <AlertTriangle className="h-3 w-3 text-yellow-400 mt-0.5 flex-shrink-0" />
-                                    {factor}
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
-
-                          {order.ai_analysis.recommendations && order.ai_analysis.recommendations.length > 0 && (
-                            <div>
-                              <p className="text-xs font-medium text-green-200 mb-1">Recommandations:</p>
-                              <ul className="space-y-1">
-                                {order.ai_analysis.recommendations.map((rec: string, index: number) => (
-                                  <li key={index} className="text-xs text-green-300 flex items-start gap-1">
-                                    <CheckCircle className="h-3 w-3 text-green-400 mt-0.5 flex-shrink-0" />
-                                    {rec}
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
+                          <div>
+                            {order.distance_to_pco && (
+                              <p className="text-blue-300">
+                                <strong>Distance PCO:</strong> {order.distance_to_pco.toFixed(2)} km
+                              </p>
+                            )}
+                            {order.distance_to_msan && (
+                              <p className="text-blue-300">
+                                <strong>Distance MSAN:</strong> {order.distance_to_msan.toFixed(2)} km
+                              </p>
+                            )}
+                            {aiAnalysis?.score && (
+                              <p className="text-blue-300">
+                                <strong>Score IA:</strong> {aiAnalysis.score}/100
+                              </p>
+                            )}
+                          </div>
                         </div>
-                      )}
+
+                        {/* Analyse IA */}
+                        {aiAnalysis && (
+                          <div className="mt-4 p-3 bg-slate-600/30 rounded border border-slate-500/30">
+                            <h4 className="font-medium text-blue-200 mb-2">Analyse IA</h4>
+                            
+                            {aiAnalysis.factors && aiAnalysis.factors.length > 0 && (
+                              <div className="mb-3">
+                                <p className="text-xs font-medium text-yellow-200 mb-1">Facteurs identifiés:</p>
+                                <ul className="space-y-1">
+                                  {aiAnalysis.factors.map((factor: string, index: number) => (
+                                    <li key={index} className="text-xs text-yellow-300 flex items-start gap-1">
+                                      <AlertTriangle className="h-3 w-3 text-yellow-400 mt-0.5 flex-shrink-0" />
+                                      {factor}
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+
+                            {aiAnalysis.recommendations && aiAnalysis.recommendations.length > 0 && (
+                              <div>
+                                <p className="text-xs font-medium text-green-200 mb-1">Recommandations:</p>
+                                <ul className="space-y-1">
+                                  {aiAnalysis.recommendations.map((rec: string, index: number) => (
+                                    <li key={index} className="text-xs text-green-300 flex items-start gap-1">
+                                      <CheckCircle className="h-3 w-3 text-green-400 mt-0.5 flex-shrink-0" />
+                                      {rec}
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex items-center gap-3 pt-4 border-t border-slate-600/50">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="border-blue-600/20 text-blue-200 hover:bg-blue-600/20"
+                      >
+                        <Eye className="h-4 w-4 mr-2" />
+                        Voir détails
+                      </Button>
+                      
+                      <Button
+                        onClick={() => handleApproveOrder(order.id)}
+                        disabled={updateOrder.isPending}
+                        size="sm"
+                        className="bg-green-600/20 hover:bg-green-600/30 text-green-200 border-green-600/20"
+                      >
+                        <CheckCircle className="h-4 w-4 mr-2" />
+                        Approuver
+                      </Button>
+                      
+                      <Button
+                        onClick={() => handleRejectOrder(order.id)}
+                        disabled={updateOrder.isPending}
+                        variant="destructive"
+                        size="sm"
+                        className="bg-red-600/20 hover:bg-red-600/30 text-red-200 border-red-600/20"
+                      >
+                        <XCircle className="h-4 w-4 mr-2" />
+                        Rejeter
+                      </Button>
                     </div>
                   </div>
-
-                  {/* Actions */}
-                  <div className="flex items-center gap-3 pt-4 border-t border-slate-600/50">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="border-blue-600/20 text-blue-200 hover:bg-blue-600/20"
-                    >
-                      <Eye className="h-4 w-4 mr-2" />
-                      Voir détails
-                    </Button>
-                    
-                    <Button
-                      onClick={() => handleApproveOrder(order.id)}
-                      disabled={updateOrder.isPending}
-                      size="sm"
-                      className="bg-green-600/20 hover:bg-green-600/30 text-green-200 border-green-600/20"
-                    >
-                      <CheckCircle className="h-4 w-4 mr-2" />
-                      Approuver
-                    </Button>
-                    
-                    <Button
-                      onClick={() => handleRejectOrder(order.id)}
-                      disabled={updateOrder.isPending}
-                      variant="destructive"
-                      size="sm"
-                      className="bg-red-600/20 hover:bg-red-600/30 text-red-200 border-red-600/20"
-                    >
-                      <XCircle className="h-4 w-4 mr-2" />
-                      Rejeter
-                    </Button>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </CardContent>
