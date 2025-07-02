@@ -5,8 +5,9 @@ import EquipmentManagement from "@/components/EquipmentManagement";
 import TicketManagement from "@/components/TicketManagement";
 import EquipmentMap from "@/components/EquipmentMap";
 import TechnicalOrders from "@/components/TechnicalOrders";
+import TechnicalReports from "@/components/TechnicalReports";
 import DashboardNavigation from "@/components/DashboardNavigation";
-import { Network, Router, MapPin, AlertCircle, Wrench } from "lucide-react";
+import { Network, Router, MapPin, AlertCircle, Wrench, FileText } from "lucide-react";
 
 interface TechnicalDashboardProps {
   onGoHome: () => void;
@@ -23,14 +24,14 @@ const TechnicalDashboard = ({ onGoHome }: TechnicalDashboardProps) => {
             Smart Telecom - Technique
           </h1>
           <p className="text-blue-200">
-            Plateforme technique de supervision et maintenance réseau FTTH
+            Plateforme technique de supervision, maintenance et rapports FTTH
           </p>
         </div>
 
         <TechnicalStats />
 
         <Tabs defaultValue="orders" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5 bg-slate-800/50 border-blue-600/20">
+          <TabsList className="grid w-full grid-cols-6 bg-slate-800/50 border-blue-600/20">
             <TabsTrigger value="orders" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-200">
               <Wrench className="h-4 w-4 mr-2" />
               Études
@@ -46,6 +47,10 @@ const TechnicalDashboard = ({ onGoHome }: TechnicalDashboardProps) => {
             <TabsTrigger value="map" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-200">
               <MapPin className="h-4 w-4 mr-2" />
               Cartographie
+            </TabsTrigger>
+            <TabsTrigger value="reports" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-200">
+              <FileText className="h-4 w-4 mr-2" />
+              Rapports
             </TabsTrigger>
             <TabsTrigger value="monitoring" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-200">
               <Router className="h-4 w-4 mr-2" />
@@ -67,6 +72,10 @@ const TechnicalDashboard = ({ onGoHome }: TechnicalDashboardProps) => {
 
           <TabsContent value="map" className="space-y-6">
             <EquipmentMap />
+          </TabsContent>
+
+          <TabsContent value="reports" className="space-y-6">
+            <TechnicalReports />
           </TabsContent>
 
           <TabsContent value="monitoring" className="space-y-6">

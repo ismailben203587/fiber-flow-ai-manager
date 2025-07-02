@@ -2,8 +2,9 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CommercialStats from "@/components/CommercialStats";
 import CommercialCommands from "@/components/CommercialCommands";
+import ComplaintForm from "@/components/ComplaintForm";
 import DashboardNavigation from "@/components/DashboardNavigation";
-import { Building2, Users, ShoppingCart } from "lucide-react";
+import { Building2, Users, ShoppingCart, Plus } from "lucide-react";
 
 interface CommercialDashboardProps {
   onGoHome: () => void;
@@ -20,7 +21,7 @@ const CommercialDashboard = ({ onGoHome }: CommercialDashboardProps) => {
             Smart Telecom - Commercial
           </h1>
           <p className="text-gray-600">
-            Plateforme de gestion commerciale et commandes FTTH
+            Plateforme de gestion commerciale et création de tickets
           </p>
         </div>
 
@@ -32,13 +33,13 @@ const CommercialDashboard = ({ onGoHome }: CommercialDashboardProps) => {
               <ShoppingCart className="h-4 w-4 mr-2" />
               Commandes
             </TabsTrigger>
+            <TabsTrigger value="tickets" className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white">
+              <Plus className="h-4 w-4 mr-2" />
+              Nouveau Ticket
+            </TabsTrigger>
             <TabsTrigger value="clients" className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white">
               <Users className="h-4 w-4 mr-2" />
               Clients
-            </TabsTrigger>
-            <TabsTrigger value="reports" className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white">
-              <Building2 className="h-4 w-4 mr-2" />
-              Rapports
             </TabsTrigger>
           </TabsList>
 
@@ -46,17 +47,14 @@ const CommercialDashboard = ({ onGoHome }: CommercialDashboardProps) => {
             <CommercialCommands />
           </TabsContent>
 
+          <TabsContent value="tickets" className="space-y-6">
+            <ComplaintForm />
+          </TabsContent>
+
           <TabsContent value="clients" className="space-y-6">
             <div className="text-center py-12">
               <h3 className="text-xl font-semibold mb-4">Gestion Clients</h3>
               <p className="text-gray-600">Module clients - À venir</p>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="reports" className="space-y-6">
-            <div className="text-center py-12">
-              <h3 className="text-xl font-semibold mb-4">Rapports Commerciaux</h3>
-              <p className="text-gray-600">Génération de rapports commerciaux - À venir</p>
             </div>
           </TabsContent>
         </Tabs>
