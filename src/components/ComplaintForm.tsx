@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, AlertCircle } from 'lucide-react';
+import { Plus, AlertCircle, MapPin } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useCreateComplaint } from '@/hooks/useComplaints';
 
@@ -16,6 +16,7 @@ const ComplaintForm = () => {
   
   const [newComplaint, setNewComplaint] = useState({
     clientName: '',
+    clientAddress: '',
     complaintType: '',
     priority: '',
     description: ''
@@ -37,6 +38,7 @@ const ComplaintForm = () => {
       
       await createComplaint.mutateAsync({
         client_name: newComplaint.clientName,
+        client_address: newComplaint.clientAddress || null,
         complaint_type: newComplaint.complaintType,
         priority: newComplaint.priority,
         description: newComplaint.description,
@@ -46,11 +48,12 @@ const ComplaintForm = () => {
 
       toast({
         title: "Ticket créé avec succès",
-        description: `Le ticket ${complaintNumber} a été créé et envoyé à l'équipe technique.`,
+        description: `Le ticket ${complaintNumber} a été créé et un technicien sera automatiquement assigné.`,
       });
 
       setNewComplaint({
         clientName: '',
+        clientAddress: '',
         complaintType: '',
         priority: '',
         description: ''
@@ -85,6 +88,18 @@ const ComplaintForm = () => {
             />
           </div>
           <div className="space-y-2">
+            <Label htmlFor="clientAddress">Adresse du client</Label>
+            <Input
+              id="clientAddress"
+              value={newComplaint.clientAddress}
+              onChange={(e) => setNewComplaint({ ...newComplaint, clientAddress: e.target.value })}
+              placeholder="Adresse complète (pour assignation automatique)"
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
             <Label htmlFor="complaintType">Type de problème *</Label>
             <Select value={newComplaint.complaintType} onValueChange={(value) => setNewComplaint({ ...newComplaint, complaintType: value })}>
               <SelectTrigger>
@@ -96,25 +111,26 @@ const ComplaintForm = () => {
                 <SelectItem value="connexion-instable">Connexion instable</SelectItem>
                 <SelectItem value="installation">Problème d'installation</SelectItem>
                 <SelectItem value="facturation">Problème de facturation</SelectItem>
+                <SelectItem value="maintenance">Maintenance préventive</SelectItem>
                 <SelectItem value="autre">Autre</SelectItem>
               </SelectContent>
             </Select>
           </div>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="priority">Priorité *</Label>
-          <Select value={newComplaint.priority} onValueChange={(value) => setNewComplaint({ ...newComplaint, priority: value })}>
-            <SelectTrigger>
-              <SelectValue placeholder="Niveau de priorité" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="critical">Critique</SelectItem>
-              <SelectItem value="high">Haute</SelectItem>
-              <SelectItem value="medium">Moyenne</SelectItem>
-              <SelectItem value="low">Basse</SelectItem>
-            </SelectContent>
-          </Select>
+          
+          <div className="space-y-2">
+            <Label htmlFor="priority">Priorité *</Label>
+            <Select value={newComplaint.priority} onValueChange={(value) => setNewComplaint({ ...newComplaint, priority: value })}>
+              <SelectTrigger>
+                <SelectValue placeholder="Niveau de priorité" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="critical">Critique</SelectItem>
+                <SelectItem value="high">Haute</SelectItem>
+                <SelectItem value="medium">Moyenne</SelectItem>
+                <SelectItem value="low">Basse</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         <div className="space-y-2">
@@ -130,11 +146,25 @@ const ComplaintForm = () => {
 
         <div className="bg-blue-50 p-4 rounded-lg">
           <div className="flex items-start space-x-3">
-            <AlertCircle className="h-5 w-5 text-blue-600 mt-0.5" />
+            <MapPin className="h-5 w-5 text-blue-600 mt-0.5" />
             <div>
-              <h4 className="font-medium text-blue-900">Transmission automatique</h4>
+              <h4 className="font-medium text-blue-900">Assignation Intelligente</h4>
               <p className="text-sm text-blue-700">
-                Ce ticket sera automatiquement transmis à l'équipe technique pour traitement.
+                Le système assignera automatiquement le technicien le plus approprié selon la zone géographique, 
+                la spécialité technique et la charge de travail actuelle.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-green-50 p-4 rounded-lg">
+          <div className="flex items-start space-x-3">
+            <AlertCircle className="h-5 w-5 text-green-600 mt-0.5" />
+            <div>
+              <h4 className="font-medium text-green-900">Suivi Automatique</h4>
+              <p className="text-sm text-green-700">
+                Le ticket sera automatiquement suivi pour détecter les répétitions et les retards. 
+                Des notifications seront envoyées aux techniciens concernés.
               </p>
             </div>
           </div>

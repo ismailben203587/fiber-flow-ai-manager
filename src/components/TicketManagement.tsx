@@ -4,21 +4,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Ticket, User, Clock, AlertCircle, CheckCircle } from 'lucide-react';
+import { Ticket, User, Clock, AlertCircle, CheckCircle, Bell, MapPin, Wrench } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useCustomerComplaints, useUpdateComplaint } from '@/hooks/useComplaints';
+import { useTechnicians, useTicketNotifications } from '@/hooks/useTechnicians';
 
 const TicketManagement = () => {
   const { toast } = useToast();
   const { data: complaints, isLoading } = useCustomerComplaints();
+  const { data: technicians, isLoading: techniciansLoading } = useTechnicians();
+  const { data: notifications, isLoading: notificationsLoading } = useTicketNotifications();
   const updateComplaint = useUpdateComplaint();
-
-  const technicians = [
-    { id: 1, name: 'Marc Technicien', zone: 'Zone A', activeTickets: 3, speciality: 'Réparation' },
-    { id: 2, name: 'Sophie Tech', zone: 'Zone B', activeTickets: 2, speciality: 'Installation' },
-    { id: 3, name: 'Paul Installateur', zone: 'Zone C', activeTickets: 1, speciality: 'Installation' },
-    { id: 4, name: 'Alice Maintenance', zone: 'Zone D', activeTickets: 4, speciality: 'Maintenance' }
-  ];
 
   const handleUpdateTicketStatus = async (ticketId: string, newStatus: string) => {
     try {
@@ -66,22 +62,16 @@ const TicketManagement = () => {
   };
 
   const getComplaintTypeLabel = (type: string) => {
-    switch (type) {
-      case 'debit-lent':
-        return 'Débit lent';
-      case 'panne-totale':
-        return 'Panne totale';
-      case 'connexion-instable':
-        return 'Connexion instable';
-      case 'installation':
-        return 'Problème d\'installation';
-      case 'facturation':
-        return 'Problème de facturation';
-      case 'autre':
-        return 'Autre';
-      default:
-        return type;
-    }
+    const types = {
+      'debit-lent': 'Débit lent',
+      'panne-totale': 'Panne totale',
+      'connexion-instable': 'Connexion instable',
+      'installation': 'Problème d\'installation',
+      'facturation': 'Problème de facturation',
+      'maintenance': 'Maintenance préventive',
+      'autre': 'Autre'
+    };
+    return types[type as keyof typeof types] || type;
   };
 
   if (isLoading) {
@@ -97,17 +87,23 @@ const TicketManagement = () => {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-blue-100">Gestion des Tickets</h2>
-          <p className="text-blue-300">Tickets créés par l'équipe commerciale</p>
+          <p className="text-blue-300">Tickets avec assignation automatique intelligente</p>
         </div>
       </div>
 
       <Tabs defaultValue="tickets" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2 bg-slate-800/50 border-blue-600/20">
+        <TabsList className="grid w-full grid-cols-3 bg-slate-800/50 border-blue-600/20">
           <TabsTrigger value="tickets" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-200">
-            Tickets Reçus
+            <Ticket className="h-4 w-4 mr-2" />
+            Tickets
           </TabsTrigger>
           <TabsTrigger value="technicians" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-200">
+            <User className="h-4 w-4 mr-2" />
             Techniciens
+          </TabsTrigger>
+          <TabsTrigger value="notifications" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-200">
+            <Bell className="h-4 w-4 mr-2" />
+            Notifications
           </TabsTrigger>
         </TabsList>
 
@@ -118,7 +114,7 @@ const TicketManagement = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-blue-100">
                     <Ticket className="h-5 w-5" />
-                    Tickets Reçus du Commercial
+                    Tickets avec Assignation Automatique
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -132,11 +128,33 @@ const TicketManagement = () => {
                                 <h3 className="font-semibold text-blue-100">{complaint.complaint_number}</h3>
                                 {getPriorityBadge(complaint.priority || 'medium')}
                                 {getStatusBadge(complaint.status || 'open')}
+                                {complaint.repeat_count && complaint.repeat_count > 0 && (
+                                  <Badge className="bg-orange-100 text-orange-800">
+                                    Répété {complaint.repeat_count}x
+                                  </Badge>
+                                )}
                               </div>
                               <p className="text-sm text-blue-300 mb-1">{complaint.client_name}</p>
                               <p className="text-sm text-blue-400">
                                 {getComplaintTypeLabel(complaint.complaint_type)}
                               </p>
+                              {complaint.client_zone && (
+                                <div className="flex items-center gap-1 mt-1">
+                                  <MapPin className="h-3 w-3 text-blue-400" />
+                                  <span className="text-xs text-blue-400">{complaint.client_zone}</span>
+                                </div>
+                              )}
+                              {complaint.assigned_technician && (
+                                <div className="flex items-center gap-1 mt-1">
+                                  <Wrench className="h-3 w-3 text-green-400" />
+                                  <span className="text-xs text-green-400">
+                                    Assigné à {complaint.assigned_technician.name}
+                                    {complaint.assigned_technician.speciality && 
+                                      ` (${complaint.assigned_technician.speciality})`
+                                    }
+                                  </span>
+                                </div>
+                              )}
                               {complaint.description && (
                                 <p className="text-xs text-blue-400 mt-2">
                                   {complaint.description}
@@ -171,13 +189,18 @@ const TicketManagement = () => {
                           
                           <div className="text-xs text-blue-400 pt-2 border-t border-blue-600/20">
                             Créé le {new Date(complaint.created_at || '').toLocaleDateString('fr-FR')}
+                            {complaint.due_date && (
+                              <span className="ml-4">
+                                Échéance: {new Date(complaint.due_date).toLocaleDateString('fr-FR')}
+                              </span>
+                            )}
                           </div>
                         </div>
                       ))
                     ) : (
                       <div className="text-center py-8">
                         <AlertCircle className="h-12 w-12 text-blue-400 mx-auto mb-4" />
-                        <h3 className="text-lg font-semibold text-blue-200 mb-2">Aucun ticket reçu</h3>
+                        <h3 className="text-lg font-semibold text-blue-200 mb-2">Aucun ticket</h3>
                         <p className="text-blue-400">Les tickets créés par l'équipe commerciale apparaîtront ici.</p>
                       </div>
                     )}
@@ -210,6 +233,18 @@ const TicketManagement = () => {
                       {complaints?.filter(c => c.status === 'resolved').length || 0}
                     </Badge>
                   </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-blue-300">Assignés automatiquement</span>
+                    <Badge className="bg-purple-100 text-purple-800">
+                      {complaints?.filter(c => c.assigned_technician_id).length || 0}
+                    </Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-blue-300">Tickets répétés</span>
+                    <Badge className="bg-orange-100 text-orange-800">
+                      {complaints?.filter(c => c.repeat_count && c.repeat_count > 0).length || 0}
+                    </Badge>
+                  </div>
                 </CardContent>
               </Card>
             </div>
@@ -218,7 +253,7 @@ const TicketManagement = () => {
 
         <TabsContent value="technicians" className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {technicians.map((tech) => (
+            {!techniciansLoading && technicians?.map((tech) => (
               <Card key={tech.id} className="bg-slate-800/50 border-blue-600/20">
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between">
@@ -226,29 +261,89 @@ const TicketManagement = () => {
                       <User className="h-5 w-5" />
                       {tech.name}
                     </span>
-                    <Badge variant={tech.activeTickets > 3 ? 'destructive' : 'default'}>
-                      {tech.activeTickets} tickets
+                    <Badge variant={tech.active_tickets && tech.active_tickets.length > 3 ? 'destructive' : 'default'}>
+                      {tech.active_tickets?.length || 0} tickets
                     </Badge>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-blue-300">Zone</span>
-                    <span className="font-medium text-blue-100">{tech.zone}</span>
+                    <span className="font-medium text-blue-100">
+                      {tech.zone?.name || 'Non assignée'}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-blue-300">Spécialité</span>
                     <Badge variant="outline" className="text-blue-300 border-blue-600/20">
-                      {tech.speciality}
+                      {tech.speciality || 'Généraliste'}
                     </Badge>
                   </div>
-                  <Button variant="outline" className="w-full text-blue-300 border-blue-600/20 hover:bg-blue-600/20">
-                    Voir planning
-                  </Button>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-blue-300">Statut</span>
+                    <Badge variant={tech.status === 'active' ? 'default' : 'secondary'}>
+                      {tech.status === 'active' ? 'Actif' : tech.status}
+                    </Badge>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-blue-300">Capacité</span>
+                    <span className="text-blue-100">
+                      {tech.active_tickets?.length || 0}/{tech.max_concurrent_tickets || 5}
+                    </span>
+                  </div>
                 </CardContent>
               </Card>
             ))}
           </div>
+        </TabsContent>
+
+        <TabsContent value="notifications" className="space-y-4">
+          <Card className="bg-slate-800/50 border-blue-600/20">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-blue-100">
+                <Bell className="h-5 w-5" />
+                Notifications Système
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {!notificationsLoading && notifications && notifications.length > 0 ? (
+                  notifications.map((notification) => (
+                    <div key={notification.id} className="border border-blue-600/20 rounded-lg p-3">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <Badge className={
+                              notification.notification_type === 'assignment' ? 'bg-blue-100 text-blue-800' :
+                              notification.notification_type === 'repeated_ticket' ? 'bg-orange-100 text-orange-800' :
+                              'bg-red-100 text-red-800'
+                            }>
+                              {notification.notification_type === 'assignment' ? 'Assignation' :
+                               notification.notification_type === 'repeated_ticket' ? 'Ticket répété' :
+                               'Ticket en retard'}
+                            </Badge>
+                            <span className="text-xs text-blue-400">
+                              {new Date(notification.sent_at || '').toLocaleString('fr-FR')}
+                            </span>
+                          </div>
+                          <p className="text-sm text-blue-200 mb-1">{notification.message}</p>
+                          <p className="text-xs text-blue-400">
+                            Technicien: {(notification as any).technician?.name || 'Non spécifié'}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-8">
+                    <Bell className="h-12 w-12 text-blue-400 mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold text-blue-200 mb-2">Aucune notification</h3>
+                    <p className="text-blue-400">Les notifications système apparaîtront ici.</p>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>

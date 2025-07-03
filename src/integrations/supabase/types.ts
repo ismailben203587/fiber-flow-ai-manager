@@ -11,39 +11,62 @@ export type Database = {
     Tables: {
       customer_complaints: {
         Row: {
+          assigned_technician_id: string | null
           client_name: string
+          client_zone: string | null
           complaint_number: string
           complaint_type: string
           created_at: string | null
           description: string | null
+          due_date: string | null
           id: string
+          last_repeat_date: string | null
           priority: string | null
+          repeat_count: number | null
           status: string | null
           updated_at: string | null
         }
         Insert: {
+          assigned_technician_id?: string | null
           client_name: string
+          client_zone?: string | null
           complaint_number: string
           complaint_type: string
           created_at?: string | null
           description?: string | null
+          due_date?: string | null
           id?: string
+          last_repeat_date?: string | null
           priority?: string | null
+          repeat_count?: number | null
           status?: string | null
           updated_at?: string | null
         }
         Update: {
+          assigned_technician_id?: string | null
           client_name?: string
+          client_zone?: string | null
           complaint_number?: string
           complaint_type?: string
           created_at?: string | null
           description?: string | null
+          due_date?: string | null
           id?: string
+          last_repeat_date?: string | null
           priority?: string | null
+          repeat_count?: number | null
           status?: string | null
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "customer_complaints_assigned_technician_id_fkey"
+            columns: ["assigned_technician_id"]
+            isOneToOne: false
+            referencedRelation: "technicians"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       ftth_orders: {
         Row: {
@@ -198,14 +221,193 @@ export type Database = {
         }
         Relationships: []
       }
+      technicians: {
+        Row: {
+          created_at: string | null
+          email: string | null
+          id: string
+          max_concurrent_tickets: number | null
+          name: string
+          phone: string | null
+          speciality: string | null
+          status: string | null
+          updated_at: string | null
+          zone_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          max_concurrent_tickets?: number | null
+          name: string
+          phone?: string | null
+          speciality?: string | null
+          status?: string | null
+          updated_at?: string | null
+          zone_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          max_concurrent_tickets?: number | null
+          name?: string
+          phone?: string | null
+          speciality?: string | null
+          status?: string | null
+          updated_at?: string | null
+          zone_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "technicians_zone_id_fkey"
+            columns: ["zone_id"]
+            isOneToOne: false
+            referencedRelation: "zones"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ticket_assignments: {
+        Row: {
+          assigned_at: string | null
+          complaint_id: string | null
+          id: string
+          notes: string | null
+          status: string | null
+          technician_id: string | null
+        }
+        Insert: {
+          assigned_at?: string | null
+          complaint_id?: string | null
+          id?: string
+          notes?: string | null
+          status?: string | null
+          technician_id?: string | null
+        }
+        Update: {
+          assigned_at?: string | null
+          complaint_id?: string | null
+          id?: string
+          notes?: string | null
+          status?: string | null
+          technician_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ticket_assignments_complaint_id_fkey"
+            columns: ["complaint_id"]
+            isOneToOne: false
+            referencedRelation: "customer_complaints"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ticket_assignments_technician_id_fkey"
+            columns: ["technician_id"]
+            isOneToOne: false
+            referencedRelation: "technicians"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ticket_notifications: {
+        Row: {
+          complaint_id: string | null
+          id: string
+          message: string | null
+          notification_type: string
+          sent_at: string | null
+          technician_id: string | null
+        }
+        Insert: {
+          complaint_id?: string | null
+          id?: string
+          message?: string | null
+          notification_type: string
+          sent_at?: string | null
+          technician_id?: string | null
+        }
+        Update: {
+          complaint_id?: string | null
+          id?: string
+          message?: string | null
+          notification_type?: string
+          sent_at?: string | null
+          technician_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ticket_notifications_complaint_id_fkey"
+            columns: ["complaint_id"]
+            isOneToOne: false
+            referencedRelation: "customer_complaints"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ticket_notifications_technician_id_fkey"
+            columns: ["technician_id"]
+            isOneToOne: false
+            referencedRelation: "technicians"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      zones: {
+        Row: {
+          coordinates: Json | null
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          coordinates?: Json | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          coordinates?: Json | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      ai_assign_technician: {
+        Args: {
+          complaint_id: string
+          complaint_type: string
+          priority: string
+          client_address?: string
+        }
+        Returns: string
+      }
       calculate_distance: {
         Args: { lat1: number; lon1: number; lat2: number; lon2: number }
         Returns: number
+      }
+      detect_client_zone: {
+        Args: { client_address: string }
+        Returns: string
+      }
+      detect_overdue_tickets: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      detect_repeated_tickets: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
       }
     }
     Enums: {
