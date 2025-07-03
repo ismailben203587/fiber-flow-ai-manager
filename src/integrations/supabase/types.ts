@@ -12,6 +12,7 @@ export type Database = {
       customer_complaints: {
         Row: {
           assigned_technician_id: string | null
+          client_address: string | null
           client_name: string
           client_zone: string | null
           complaint_number: string
@@ -28,6 +29,7 @@ export type Database = {
         }
         Insert: {
           assigned_technician_id?: string | null
+          client_address?: string | null
           client_name: string
           client_zone?: string | null
           complaint_number: string
@@ -44,6 +46,7 @@ export type Database = {
         }
         Update: {
           assigned_technician_id?: string | null
+          client_address?: string | null
           client_name?: string
           client_zone?: string | null
           complaint_number?: string
