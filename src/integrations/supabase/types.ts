@@ -9,10 +9,50 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      clients: {
+        Row: {
+          address: string
+          cin: string
+          client_number: string
+          created_at: string
+          email: string | null
+          id: string
+          name: string
+          phone: string | null
+          updated_at: string
+          voip_number: string
+        }
+        Insert: {
+          address: string
+          cin: string
+          client_number: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          name: string
+          phone?: string | null
+          updated_at?: string
+          voip_number: string
+        }
+        Update: {
+          address?: string
+          cin?: string
+          client_number?: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string
+          phone?: string | null
+          updated_at?: string
+          voip_number?: string
+        }
+        Relationships: []
+      }
       customer_complaints: {
         Row: {
           assigned_technician_id: string | null
           client_address: string | null
+          client_id: string | null
           client_name: string
           client_zone: string | null
           complaint_number: string
@@ -26,10 +66,12 @@ export type Database = {
           repeat_count: number | null
           status: string | null
           updated_at: string | null
+          voip_number: string | null
         }
         Insert: {
           assigned_technician_id?: string | null
           client_address?: string | null
+          client_id?: string | null
           client_name: string
           client_zone?: string | null
           complaint_number: string
@@ -43,10 +85,12 @@ export type Database = {
           repeat_count?: number | null
           status?: string | null
           updated_at?: string | null
+          voip_number?: string | null
         }
         Update: {
           assigned_technician_id?: string | null
           client_address?: string | null
+          client_id?: string | null
           client_name?: string
           client_zone?: string | null
           complaint_number?: string
@@ -60,6 +104,7 @@ export type Database = {
           repeat_count?: number | null
           status?: string | null
           updated_at?: string | null
+          voip_number?: string | null
         }
         Relationships: [
           {
@@ -67,6 +112,13 @@ export type Database = {
             columns: ["assigned_technician_id"]
             isOneToOne: false
             referencedRelation: "technicians"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customer_complaints_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
             referencedColumns: ["id"]
           },
         ]
@@ -77,8 +129,11 @@ export type Database = {
           assigned_msan_id: string | null
           assigned_pco_id: string | null
           client_address: string
+          client_cin: string | null
           client_email: string | null
+          client_id: string | null
           client_name: string
+          client_number: string | null
           client_phone: string | null
           created_at: string | null
           distance_to_msan: number | null
@@ -90,14 +145,18 @@ export type Database = {
           service_type: string | null
           status: string | null
           updated_at: string | null
+          voip_number: string | null
         }
         Insert: {
           ai_analysis?: Json | null
           assigned_msan_id?: string | null
           assigned_pco_id?: string | null
           client_address: string
+          client_cin?: string | null
           client_email?: string | null
+          client_id?: string | null
           client_name: string
+          client_number?: string | null
           client_phone?: string | null
           created_at?: string | null
           distance_to_msan?: number | null
@@ -109,14 +168,18 @@ export type Database = {
           service_type?: string | null
           status?: string | null
           updated_at?: string | null
+          voip_number?: string | null
         }
         Update: {
           ai_analysis?: Json | null
           assigned_msan_id?: string | null
           assigned_pco_id?: string | null
           client_address?: string
+          client_cin?: string | null
           client_email?: string | null
+          client_id?: string | null
           client_name?: string
+          client_number?: string | null
           client_phone?: string | null
           created_at?: string | null
           distance_to_msan?: number | null
@@ -128,6 +191,7 @@ export type Database = {
           service_type?: string | null
           status?: string | null
           updated_at?: string | null
+          voip_number?: string | null
         }
         Relationships: [
           {
@@ -142,6 +206,13 @@ export type Database = {
             columns: ["assigned_pco_id"]
             isOneToOne: false
             referencedRelation: "pco_equipment"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ftth_orders_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
             referencedColumns: ["id"]
           },
         ]
@@ -411,6 +482,19 @@ export type Database = {
       detect_repeated_tickets: {
         Args: Record<PropertyKey, never>
         Returns: undefined
+      }
+      get_client_by_voip: {
+        Args: { voip_num: string }
+        Returns: {
+          id: string
+          client_number: string
+          voip_number: string
+          cin: string
+          name: string
+          address: string
+          phone: string
+          email: string
+        }[]
       }
     }
     Enums: {

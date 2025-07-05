@@ -9,18 +9,44 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Plus, AlertCircle, MapPin } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useCreateComplaint } from '@/hooks/useComplaints';
+import VoipClientLookup from './VoipClientLookup';
 
 const ComplaintForm = () => {
   const { toast } = useToast();
   const createComplaint = useCreateComplaint();
   
+  const [clientFound, setClientFound] = useState(false);
+  const [clientData, setClientData] = useState<any>(null);
   const [newComplaint, setNewComplaint] = useState({
     clientName: '',
     clientAddress: '',
     complaintType: '',
     priority: '',
-    description: ''
+    description: '',
+    voipNumber: ''
   });
+
+  const handleClientFound = (client: any) => {
+    setClientFound(true);
+    setClientData(client);
+    setNewComplaint(prev => ({
+      ...prev,
+      clientName: client.name,
+      clientAddress: client.address,
+      voipNumber: client.voip_number
+    }));
+  };
+
+  const handleClientNotFound = () => {
+    setClientFound(false);
+    setClientData(null);
+    setNewComplaint(prev => ({
+      ...prev,
+      clientName: '',
+      clientAddress: '',
+      voipNumber: ''
+    }));
+  };
 
   const handleCreateComplaint = async () => {
     if (!newComplaint.clientName || !newComplaint.complaintType || !newComplaint.priority) {
@@ -43,7 +69,9 @@ const ComplaintForm = () => {
         priority: newComplaint.priority,
         description: newComplaint.description,
         complaint_number: complaintNumber,
-        status: 'open'
+        status: 'open',
+        client_id: clientData?.id || null,
+        voip_number: newComplaint.voipNumber || null
       });
 
       toast({
@@ -51,13 +79,17 @@ const ComplaintForm = () => {
         description: `Le ticket ${complaintNumber} a été créé et un technicien sera automatiquement assigné.`,
       });
 
+      // Reset form
       setNewComplaint({
         clientName: '',
         clientAddress: '',
         complaintType: '',
         priority: '',
-        description: ''
+        description: '',
+        voipNumber: ''
       });
+      setClientFound(false);
+      setClientData(null);
     } catch (error) {
       console.error('Error creating complaint:', error);
       toast({
@@ -76,7 +108,12 @@ const ComplaintForm = () => {
           Nouveau Ticket
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-6">
+        <VoipClientLookup 
+          onClientFound={handleClientFound}
+          onClientNotFound={handleClientNotFound}
+        />
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="clientName">Nom du client *</Label>
@@ -85,6 +122,7 @@ const ComplaintForm = () => {
               value={newComplaint.clientName}
               onChange={(e) => setNewComplaint({ ...newComplaint, clientName: e.target.value })}
               placeholder="Nom du client"
+              disabled={clientFound}
             />
           </div>
           <div className="space-y-2">
@@ -94,6 +132,7 @@ const ComplaintForm = () => {
               value={newComplaint.clientAddress}
               onChange={(e) => setNewComplaint({ ...newComplaint, clientAddress: e.target.value })}
               placeholder="Adresse complète (pour assignation automatique)"
+              disabled={clientFound}
             />
           </div>
         </div>
