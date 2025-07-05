@@ -21,16 +21,30 @@ const TechnicalOrders = () => {
 
   console.log('📋 Toutes les commandes:', orders);
 
-  // Filtrer les commandes nécessitant une étude technique
+  // Filtrer les commandes nécessitant une étude technique basée sur la distance
   const technicalOrders = orders.filter(order => {
     console.log(`🔍 Vérification commande ${order.order_number}:`, {
       feasibility_status: order.feasibility_status,
-      status: order.status
+      status: order.status,
+      distance_to_pco: order.distance_to_pco,
+      distance_to_msan: order.distance_to_msan
     });
     
-    return order.feasibility_status === 'rejected' || 
-           order.status === 'technical_review' ||
-           (order.feasibility_status === 'pending' && order.status !== 'completed');
+    // Critères pour nécessiter une étude technique:
+    // 1. Commandes rejetées qui nécessitent une révision technique
+    // 2. Commandes en révision technique
+    // 3. Commandes avec distances importantes (> 2km pour PCO ou > 5km pour MSAN)
+    // 4. Commandes sans distances calculées (nécessitent analyse)
+    const needsTechnicalStudy = 
+      order.feasibility_status === 'rejected' || 
+      order.status === 'technical_review' ||
+      (order.distance_to_pco && order.distance_to_pco > 2) ||
+      (order.distance_to_msan && order.distance_to_msan > 5) ||
+      (order.feasibility_status === 'pending' && 
+       (!order.distance_to_pco || !order.distance_to_msan));
+    
+    console.log(`📏 Commande ${order.order_number} nécessite étude:`, needsTechnicalStudy);
+    return needsTechnicalStudy;
   });
 
   console.log('🔧 Commandes pour étude technique:', technicalOrders);
@@ -95,6 +109,19 @@ const TechnicalOrders = () => {
     return <Badge variant="outline">En attente</Badge>;
   };
 
+  const getDistanceBadge = (order: any) => {
+    const pcoDistance = order.distance_to_pco;
+    const msanDistance = order.distance_to_msan;
+    
+    if (pcoDistance > 2 || msanDistance > 5) {
+      return <Badge className="bg-red-500/20 text-red-200">🔴 Distance Élevée</Badge>;
+    }
+    if (!pcoDistance || !msanDistance) {
+      return <Badge className="bg-orange-500/20 text-orange-200">⚠️ Distance Inconnue</Badge>;
+    }
+    return <Badge className="bg-blue-500/20 text-blue-200">📏 Distance OK</Badge>;
+  };
+
   const getRiskBadge = (aiAnalysis: any) => {
     if (!aiAnalysis || typeof aiAnalysis !== 'object') return null;
     
@@ -135,7 +162,7 @@ const TechnicalOrders = () => {
           ) : technicalOrders.length === 0 ? (
             <div className="text-center py-8">
               <div className="text-blue-300 mb-4">
-                Aucune commande en attente d'étude technique
+                Aucune commande nécessitant une étude technique
               </div>
               <div className="text-sm text-blue-400">
                 Total des commandes: {orders.length}
@@ -153,6 +180,7 @@ const TechnicalOrders = () => {
                         <div className="flex items-center gap-4 mb-2">
                           <h3 className="font-semibold text-blue-100">{order.order_number}</h3>
                           {getStatusBadge(order)}
+                          {getDistanceBadge(order)}
                           {getRiskBadge(order.ai_analysis)}
                         </div>
                         
@@ -190,11 +218,13 @@ const TechnicalOrders = () => {
                             {order.distance_to_pco && (
                               <p className="text-blue-300">
                                 <strong>Distance PCO:</strong> {order.distance_to_pco.toFixed(2)} km
+                                {order.distance_to_pco > 2 && <span className="text-red-300"> ⚠️</span>}
                               </p>
                             )}
                             {order.distance_to_msan && (
                               <p className="text-blue-300">
                                 <strong>Distance MSAN:</strong> {order.distance_to_msan.toFixed(2)} km
+                                {order.distance_to_msan > 5 && <span className="text-red-300"> ⚠️</span>}
                               </p>
                             )}
                             {aiAnalysis?.score && (
