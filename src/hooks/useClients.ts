@@ -42,7 +42,7 @@ export const useCreateClient = () => {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: async (clientData: Omit<ClientInsert, 'id' | 'created_at' | 'updated_at' | 'client_number' | 'voip_number'>) => {
+    mutationFn: async (clientData: { name: string; address: string; cin: string; phone?: string | null; email?: string | null }) => {
       const { data, error } = await supabase
         .from('clients')
         .insert([clientData])

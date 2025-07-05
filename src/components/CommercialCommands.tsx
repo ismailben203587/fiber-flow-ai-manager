@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -25,6 +24,8 @@ const CommercialCommands = () => {
   });
 
   const handleCreateOrder = async () => {
+    console.log('🚀 Tentative de création commande avec:', newOrder);
+
     if (!newOrder.clientName || !newOrder.clientAddress || !newOrder.clientCin) {
       toast({
         title: "Erreur",
@@ -34,24 +35,37 @@ const CommercialCommands = () => {
       return;
     }
 
+    if (!newOrder.clientCin.trim()) {
+      toast({
+        title: "Erreur",
+        description: "Le CIN est obligatoire et ne peut pas être vide",
+        variant: "destructive"
+      });
+      return;
+    }
+
     try {
       // Generate order number
       const orderNumber = `CMD-${Date.now().toString().slice(-6)}`;
       
-      await createOrder.mutateAsync({
+      const orderData = {
         order_number: orderNumber,
-        client_name: newOrder.clientName,
-        client_address: newOrder.clientAddress,
-        client_phone: newOrder.clientPhone || null,
-        client_email: newOrder.clientEmail || null,
-        client_cin: newOrder.clientCin,
+        client_name: newOrder.clientName.trim(),
+        client_address: newOrder.clientAddress.trim(),
+        client_phone: newOrder.clientPhone.trim() || null,
+        client_email: newOrder.clientEmail.trim() || null,
+        client_cin: newOrder.clientCin.trim(),
         service_type: newOrder.serviceType,
         status: 'pending',
         feasibility_status: 'pending'
-      });
+      };
+
+      console.log('📋 Données commande à créer:', orderData);
+
+      await createOrder.mutateAsync(orderData);
 
       toast({
-        title: "Commande créée avec succès",
+        title: "✅ Commande créée avec succès",
         description: `La commande ${orderNumber} a été créée. L'étude de faisabilité va commencer automatiquement.`,
       });
 
@@ -64,10 +78,10 @@ const CommercialCommands = () => {
         serviceType: 'FTTH'
       });
     } catch (error) {
-      console.error('Error creating order:', error);
+      console.error('❌ Erreur création commande:', error);
       toast({
         title: "Erreur",
-        description: "Une erreur est survenue lors de la création de la commande",
+        description: "Une erreur est survenue lors de la création de la commande. Vérifiez que tous les champs obligatoires sont remplis.",
         variant: "destructive"
       });
     }
@@ -202,7 +216,9 @@ const CommercialCommands = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="clientName">Nom du client *</Label>
+                <Label htmlFor="clientName" className="flex items-center gap-1">
+                  Nom du client <span className="text-red-500">*</span>
+                </Label>
                 <Input
                   id="clientName"
                   value={newOrder.clientName}
@@ -212,17 +228,21 @@ const CommercialCommands = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="clientCin">CIN *</Label>
+                <Label htmlFor="clientCin" className="flex items-center gap-1">
+                  CIN <span className="text-red-500">*</span>
+                </Label>
                 <Input
                   id="clientCin"
                   value={newOrder.clientCin}
                   onChange={(e) => setNewOrder({ ...newOrder, clientCin: e.target.value })}
-                  placeholder="Numéro CIN"
+                  placeholder="Numéro CIN (obligatoire)"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="clientAddress">Adresse *</Label>
+                <Label htmlFor="clientAddress" className="flex items-center gap-1">
+                  Adresse <span className="text-red-500">*</span>
+                </Label>
                 <Input
                   id="clientAddress"
                   value={newOrder.clientAddress}
@@ -279,6 +299,10 @@ const CommercialCommands = () => {
                 <Plus className="h-4 w-4 mr-2" />
                 {createOrder.isPending ? 'Création...' : 'Créer la commande'}
               </Button>
+
+              <div className="text-xs text-gray-500">
+                <span className="text-red-500">*</span> Champs obligatoires
+              </div>
             </CardContent>
           </Card>
         </div>

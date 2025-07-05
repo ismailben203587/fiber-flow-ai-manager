@@ -19,11 +19,21 @@ const TechnicalOrders = () => {
   const updateOrder = useUpdateFTTHOrder();
   const { toast } = useToast();
 
+  console.log('📋 Toutes les commandes:', orders);
+
   // Filtrer les commandes nécessitant une étude technique
-  const technicalOrders = orders.filter(order => 
-    order.feasibility_status === 'rejected' || 
-    order.status === 'technical_review'
-  );
+  const technicalOrders = orders.filter(order => {
+    console.log(`🔍 Vérification commande ${order.order_number}:`, {
+      feasibility_status: order.feasibility_status,
+      status: order.status
+    });
+    
+    return order.feasibility_status === 'rejected' || 
+           order.status === 'technical_review' ||
+           (order.feasibility_status === 'pending' && order.status !== 'completed');
+  });
+
+  console.log('🔧 Commandes pour étude technique:', technicalOrders);
 
   const handleApproveOrder = async (orderId: string) => {
     try {
@@ -38,6 +48,7 @@ const TechnicalOrders = () => {
         description: "L'étude technique a validé la faisabilité",
       });
     } catch (error) {
+      console.error('Erreur approbation:', error);
       toast({
         title: "Erreur",
         description: "Impossible de mettre à jour la commande",
@@ -59,6 +70,7 @@ const TechnicalOrders = () => {
         description: "L'étude technique a confirmé la non-faisabilité",
       });
     } catch (error) {
+      console.error('Erreur rejet:', error);
       toast({
         title: "Erreur",
         description: "Impossible de mettre à jour la commande",
@@ -68,6 +80,9 @@ const TechnicalOrders = () => {
   };
 
   const getStatusBadge = (order: any) => {
+    if (order.feasibility_status === 'pending') {
+      return <Badge className="bg-yellow-100 text-yellow-800">🔍 En analyse</Badge>;
+    }
     if (order.feasibility_status === 'rejected' && order.status === 'technical_review') {
       return <Badge className="bg-orange-100 text-orange-800">🔧 Étude en cours</Badge>;
     }
@@ -109,14 +124,22 @@ const TechnicalOrders = () => {
           <CardTitle className="flex items-center gap-2 text-orange-200">
             <AlertTriangle className="h-5 w-5" />
             Commandes Nécessitant une Étude Technique
+            <Badge variant="outline" className="ml-2">
+              {technicalOrders.length} commande(s)
+            </Badge>
           </CardTitle>
         </CardHeader>
         <CardContent>
           {ordersLoading ? (
             <div className="text-center py-8 text-blue-200">Chargement des commandes...</div>
           ) : technicalOrders.length === 0 ? (
-            <div className="text-center py-8 text-blue-300">
-              Aucune commande en attente d'étude technique
+            <div className="text-center py-8">
+              <div className="text-blue-300 mb-4">
+                Aucune commande en attente d'étude technique
+              </div>
+              <div className="text-sm text-blue-400">
+                Total des commandes: {orders.length}
+              </div>
             </div>
           ) : (
             <div className="space-y-4">
@@ -146,9 +169,24 @@ const TechnicalOrders = () => {
                                 <strong>Téléphone:</strong> {order.client_phone}
                               </p>
                             )}
+                            {order.client_cin && (
+                              <p className="text-blue-300">
+                                <strong>CIN:</strong> {order.client_cin}
+                              </p>
+                            )}
                           </div>
                           
                           <div>
+                            {order.client_number && (
+                              <p className="text-blue-300">
+                                <strong>N° Client:</strong> {order.client_number}
+                              </p>
+                            )}
+                            {order.voip_number && (
+                              <p className="text-blue-300">
+                                <strong>VOIP:</strong> {order.voip_number}
+                              </p>
+                            )}
                             {order.distance_to_pco && (
                               <p className="text-blue-300">
                                 <strong>Distance PCO:</strong> {order.distance_to_pco.toFixed(2)} km
