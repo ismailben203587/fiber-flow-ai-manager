@@ -3,8 +3,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CommercialStats from "@/components/CommercialStats";
 import CommercialCommands from "@/components/CommercialCommands";
 import ComplaintForm from "@/components/ComplaintForm";
+import ClientSearch from "@/components/ClientSearch";
 import DashboardNavigation from "@/components/DashboardNavigation";
-import { Building2, Users, ShoppingCart, Plus } from "lucide-react";
+import { Building2, Users, ShoppingCart, Plus, Search } from "lucide-react";
 
 interface CommercialDashboardProps {
   onGoHome: () => void;
@@ -28,14 +29,18 @@ const CommercialDashboard = ({ onGoHome }: CommercialDashboardProps) => {
         <CommercialStats />
 
         <Tabs defaultValue="commands" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3 bg-emerald-50">
+          <TabsList className="grid w-full grid-cols-4 bg-emerald-50">
             <TabsTrigger value="commands" className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white">
               <ShoppingCart className="h-4 w-4 mr-2" />
-              Commandes
+              Nouvelle Commande
             </TabsTrigger>
             <TabsTrigger value="tickets" className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white">
               <Plus className="h-4 w-4 mr-2" />
               Nouveau Ticket
+            </TabsTrigger>
+            <TabsTrigger value="search" className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white">
+              <Search className="h-4 w-4 mr-2" />
+              Recherche Client
             </TabsTrigger>
             <TabsTrigger value="clients" className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white">
               <Users className="h-4 w-4 mr-2" />
@@ -49,6 +54,10 @@ const CommercialDashboard = ({ onGoHome }: CommercialDashboardProps) => {
 
           <TabsContent value="tickets" className="space-y-6">
             <ComplaintForm />
+          </TabsContent>
+
+          <TabsContent value="search" className="space-y-6">
+            <ClientSearch />
           </TabsContent>
 
           <TabsContent value="clients" className="space-y-6">

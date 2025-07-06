@@ -1,10 +1,9 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Ticket, User, Clock, AlertCircle, CheckCircle, Bell, MapPin, Wrench } from 'lucide-react';
+import { Ticket, User, Clock, AlertCircle, CheckCircle, Bell, MapPin, Wrench, AlertTriangle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useCustomerComplaints, useUpdateComplaint } from '@/hooks/useComplaints';
 import { useTechnicians, useTicketNotifications } from '@/hooks/useTechnicians';
@@ -33,7 +32,18 @@ const TicketManagement = () => {
     }
   };
 
-  const getPriorityBadge = (priority: string) => {
+  const getPriorityBadge = (priority: string, repeatCount?: number) => {
+    const isUrgent = repeatCount && repeatCount >= 2;
+    
+    if (isUrgent) {
+      return (
+        <Badge className="bg-red-600 text-white animate-pulse border-red-800">
+          <AlertTriangle className="h-3 w-3 mr-1" />
+          URGENT ({repeatCount}x)
+        </Badge>
+      );
+    }
+    
     switch (priority) {
       case 'critical':
         return <Badge className="bg-red-100 text-red-800">Critique</Badge>;
@@ -120,83 +130,95 @@ const TicketManagement = () => {
                 <CardContent>
                   <div className="space-y-4">
                     {complaints && complaints.length > 0 ? (
-                      complaints.map((complaint) => (
-                        <div key={complaint.id} className="border border-blue-600/20 rounded-lg p-4 hover:bg-slate-700/30 transition-colors">
-                          <div className="flex items-start justify-between mb-3">
-                            <div className="flex-1">
-                              <div className="flex items-center space-x-3 mb-2">
-                                <h3 className="font-semibold text-blue-100">{complaint.complaint_number}</h3>
-                                {getPriorityBadge(complaint.priority || 'medium')}
-                                {getStatusBadge(complaint.status || 'open')}
-                                {complaint.repeat_count && complaint.repeat_count > 0 && (
-                                  <Badge className="bg-orange-100 text-orange-800">
-                                    Répété {complaint.repeat_count}x
-                                  </Badge>
+                      complaints.map((complaint) => {
+                        const isUrgent = complaint.repeat_count && complaint.repeat_count >= 2;
+                        const cardClasses = isUrgent 
+                          ? "border border-red-500/50 rounded-lg p-4 bg-red-900/20 hover:bg-red-900/30 transition-colors shadow-lg shadow-red-500/20" 
+                          : "border border-blue-600/20 rounded-lg p-4 hover:bg-slate-700/30 transition-colors";
+                        
+                        return (
+                          <div key={complaint.id} className={cardClasses}>
+                            <div className="flex items-start justify-between mb-3">
+                              <div className="flex-1">
+                                <div className="flex items-center space-x-3 mb-2">
+                                  <h3 className="font-semibold text-blue-100">{complaint.complaint_number}</h3>
+                                  {getPriorityBadge(complaint.priority || 'medium', complaint.repeat_count || 0)}
+                                  {getStatusBadge(complaint.status || 'open')}
+                                </div>
+                                <p className="text-sm text-blue-300 mb-1">{complaint.client_name}</p>
+                                <p className="text-sm text-blue-400">
+                                  {getComplaintTypeLabel(complaint.complaint_type)}
+                                </p>
+                                {complaint.client_zone && (
+                                  <div className="flex items-center gap-1 mt-1">
+                                    <MapPin className="h-3 w-3 text-blue-400" />
+                                    <span className="text-xs text-blue-400">{complaint.client_zone}</span>
+                                  </div>
+                                )}
+                                {complaint.assigned_technician && (
+                                  <div className="flex items-center gap-1 mt-1">
+                                    <Wrench className="h-3 w-3 text-green-400" />
+                                    <span className="text-xs text-green-400">
+                                      Assigné à {complaint.assigned_technician.name}
+                                      {complaint.assigned_technician.speciality && 
+                                        ` (${complaint.assigned_technician.speciality})`
+                                      }
+                                    </span>
+                                  </div>
+                                )}
+                                {complaint.description && (
+                                  <p className="text-xs text-blue-400 mt-2">
+                                    {complaint.description}
+                                  </p>
+                                )}
+                                {isUrgent && (
+                                  <div className="mt-2 bg-red-800/30 border border-red-600/50 rounded p-2">
+                                    <div className="flex items-center gap-2">
+                                      <AlertTriangle className="h-4 w-4 text-red-400" />
+                                      <span className="text-red-200 text-sm font-medium">
+                                        Ticket signalé {complaint.repeat_count} fois - Intervention urgente requise
+                                      </span>
+                                    </div>
+                                  </div>
                                 )}
                               </div>
-                              <p className="text-sm text-blue-300 mb-1">{complaint.client_name}</p>
-                              <p className="text-sm text-blue-400">
-                                {getComplaintTypeLabel(complaint.complaint_type)}
-                              </p>
-                              {complaint.client_zone && (
-                                <div className="flex items-center gap-1 mt-1">
-                                  <MapPin className="h-3 w-3 text-blue-400" />
-                                  <span className="text-xs text-blue-400">{complaint.client_zone}</span>
-                                </div>
-                              )}
-                              {complaint.assigned_technician && (
-                                <div className="flex items-center gap-1 mt-1">
-                                  <Wrench className="h-3 w-3 text-green-400" />
-                                  <span className="text-xs text-green-400">
-                                    Assigné à {complaint.assigned_technician.name}
-                                    {complaint.assigned_technician.speciality && 
-                                      ` (${complaint.assigned_technician.speciality})`
-                                    }
-                                  </span>
-                                </div>
-                              )}
-                              {complaint.description && (
-                                <p className="text-xs text-blue-400 mt-2">
-                                  {complaint.description}
-                                </p>
-                              )}
+                              <div className="flex gap-2">
+                                {complaint.status === 'open' && (
+                                  <Button 
+                                    variant="outline" 
+                                    size="sm"
+                                    onClick={() => handleUpdateTicketStatus(complaint.id, 'in_progress')}
+                                    className="text-blue-300 border-blue-600/20 hover:bg-blue-600/20"
+                                  >
+                                    <Clock className="h-3 w-3 mr-1" />
+                                    Traiter
+                                  </Button>
+                                )}
+                                {complaint.status === 'in_progress' && (
+                                  <Button 
+                                    variant="outline" 
+                                    size="sm"
+                                    onClick={() => handleUpdateTicketStatus(complaint.id, 'resolved')}
+                                    className="text-green-300 border-green-600/20 hover:bg-green-600/20"
+                                  >
+                                    <CheckCircle className="h-3 w-3 mr-1" />
+                                    Résoudre
+                                  </Button>
+                                )}
+                              </div>
                             </div>
-                            <div className="flex gap-2">
-                              {complaint.status === 'open' && (
-                                <Button 
-                                  variant="outline" 
-                                  size="sm"
-                                  onClick={() => handleUpdateTicketStatus(complaint.id, 'in_progress')}
-                                  className="text-blue-300 border-blue-600/20 hover:bg-blue-600/20"
-                                >
-                                  <Clock className="h-3 w-3 mr-1" />
-                                  Traiter
-                                </Button>
-                              )}
-                              {complaint.status === 'in_progress' && (
-                                <Button 
-                                  variant="outline" 
-                                  size="sm"
-                                  onClick={() => handleUpdateTicketStatus(complaint.id, 'resolved')}
-                                  className="text-green-300 border-green-600/20 hover:bg-green-600/20"
-                                >
-                                  <CheckCircle className="h-3 w-3 mr-1" />
-                                  Résoudre
-                                </Button>
+                            
+                            <div className="text-xs text-blue-400 pt-2 border-t border-blue-600/20">
+                              Créé le {new Date(complaint.created_at || '').toLocaleDateString('fr-FR')}
+                              {complaint.due_date && (
+                                <span className="ml-4">
+                                  Échéance: {new Date(complaint.due_date).toLocaleDateString('fr-FR')}
+                                </span>
                               )}
                             </div>
                           </div>
-                          
-                          <div className="text-xs text-blue-400 pt-2 border-t border-blue-600/20">
-                            Créé le {new Date(complaint.created_at || '').toLocaleDateString('fr-FR')}
-                            {complaint.due_date && (
-                              <span className="ml-4">
-                                Échéance: {new Date(complaint.due_date).toLocaleDateString('fr-FR')}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      ))
+                        );
+                      })
                     ) : (
                       <div className="text-center py-8">
                         <AlertCircle className="h-12 w-12 text-blue-400 mx-auto mb-4" />
@@ -234,15 +256,15 @@ const TicketManagement = () => {
                     </Badge>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-blue-300">Assignés automatiquement</span>
-                    <Badge className="bg-purple-100 text-purple-800">
-                      {complaints?.filter(c => c.assigned_technician_id).length || 0}
+                    <span className="text-sm text-blue-300">Tickets urgents</span>
+                    <Badge className="bg-red-600 text-white">
+                      {complaints?.filter(c => c.repeat_count && c.repeat_count >= 2).length || 0}
                     </Badge>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-blue-300">Tickets répétés</span>
-                    <Badge className="bg-orange-100 text-orange-800">
-                      {complaints?.filter(c => c.repeat_count && c.repeat_count > 0).length || 0}
+                    <span className="text-sm text-blue-300">Assignés automatiquement</span>
+                    <Badge className="bg-purple-100 text-purple-800">
+                      {complaints?.filter(c => c.assigned_technician_id).length || 0}
                     </Badge>
                   </div>
                 </CardContent>

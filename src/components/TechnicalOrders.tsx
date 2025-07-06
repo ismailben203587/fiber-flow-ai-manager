@@ -4,13 +4,27 @@ import { Badge } from "@/components/ui/badge";
 import { AlertTriangle } from "lucide-react";
 import { useFTTHOrders, useUpdateFTTHOrder } from "@/hooks/useOrders";
 import { useToast } from "@/hooks/use-toast";
-import { filterTechnicalOrders } from "./technical-orders/utils";
+import { filterTechnicalOrders, autoValidateFeasibleOrders } from "./technical-orders/utils";
 import { OrderCard } from "./technical-orders/OrderCard";
+import { useEffect } from "react";
 
 const TechnicalOrders = () => {
   const { data: orders = [], isLoading: ordersLoading } = useFTTHOrders();
   const updateOrder = useUpdateFTTHOrder();
   const { toast } = useToast();
+
+  // Auto-validation des commandes faisables
+  useEffect(() => {
+    if (orders.length > 0) {
+      autoValidateFeasibleOrders(orders, async (id, updates) => {
+        await updateOrder.mutateAsync({ id, ...updates });
+        toast({
+          title: "✅ Validation automatique",
+          description: "Une commande faisable a été automatiquement validée",
+        });
+      });
+    }
+  }, [orders, updateOrder, toast]);
 
   const technicalOrders = filterTechnicalOrders(orders);
 
@@ -80,6 +94,10 @@ const TechnicalOrders = () => {
               </div>
               <div className="text-sm text-blue-400">
                 Total des commandes: {orders.length}
+                <br />
+                <span className="text-green-400">
+                  Les commandes faisables sont automatiquement validées
+                </span>
               </div>
             </div>
           ) : (
