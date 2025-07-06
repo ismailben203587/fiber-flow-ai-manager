@@ -48,10 +48,41 @@ export const useCreateComplaint = () => {
     mutationFn: async (complaintData: Omit<CustomerComplaintInsert, 'id' | 'created_at' | 'updated_at'>) => {
       console.log('Creating complaint with data:', complaintData);
       
+      // Vérifier les tickets répétés AVANT de créer le nouveau ticket
+      const { data: existingComplaints, error: searchError } = await supabase
+        .from('customer_complaints')
+        .select('*')
+        .eq('client_name', complaintData.client_name)
+        .eq('complaint_type', complaintData.complaint_type)
+        .gte('created_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()); // Derniers 30 jours
+      
+      if (searchError) {
+        console.error('Error searching for existing complaints:', searchError);
+      }
+      
+      const repeatCount = existingComplaints ? existingComplaints.length : 0;
+      console.log(`Found ${repeatCount} existing similar complaints for ${complaintData.client_name}`);
+      
+      // Ajuster la priorité si c'est un ticket répété
+      let finalPriority = complaintData.priority || 'medium';
+      if (repeatCount >= 2) {
+        finalPriority = 'critical'; // Escalader à critique si répété 2+ fois
+        console.log('Escalating priority to critical due to repeated tickets');
+      } else if (repeatCount >= 1) {
+        if (finalPriority === 'low') finalPriority = 'medium';
+        if (finalPriority === 'medium') finalPriority = 'high';
+        console.log(`Escalating priority to ${finalPriority} due to repeated ticket`);
+      }
+      
       // First create the complaint
       const { data: complaint, error: insertError } = await supabase
         .from('customer_complaints')
-        .insert([complaintData])
+        .insert([{
+          ...complaintData,
+          priority: finalPriority,
+          repeat_count: repeatCount,
+          last_repeat_date: repeatCount > 0 ? new Date().toISOString() : null
+        }])
         .select()
         .single();
       
@@ -67,7 +98,7 @@ export const useCreateComplaint = () => {
             .rpc('ai_assign_technician', {
               complaint_id: complaint.id,
               complaint_type: complaintData.complaint_type,
-              priority: complaintData.priority || 'medium',
+              priority: finalPriority,
               client_address: complaintData.client_address
             });
           
@@ -101,13 +132,17 @@ export const useCreateComplaint = () => {
             }
             
             // Create assignment notification
+            const notificationMessage = repeatCount >= 2 
+              ? `URGENT - Ticket répété ${repeatCount + 1} fois: ${complaint.complaint_number} - ${complaintData.complaint_type}`
+              : `Nouveau ticket assigné: ${complaint.complaint_number} - ${complaintData.complaint_type}`;
+            
             const { error: notificationError } = await supabase
               .from('ticket_notifications')
               .insert([{
                 complaint_id: complaint.id,
                 technician_id: assignedTechnicianId,
-                notification_type: 'assignment',
-                message: `Nouveau ticket assigné: ${complaint.complaint_number} - ${complaintData.complaint_type}`
+                notification_type: repeatCount >= 2 ? 'repeated_ticket' : 'assignment',
+                message: notificationMessage
               }]);
             
             if (notificationError) {

@@ -21,7 +21,6 @@ const ComplaintForm = () => {
     clientName: '',
     clientAddress: '',
     complaintType: '',
-    priority: '',
     description: '',
     voipNumber: ''
   });
@@ -48,8 +47,26 @@ const ComplaintForm = () => {
     }));
   };
 
+  // Fonction pour déterminer automatiquement la priorité basée sur le type de problème
+  const determineAutomaticPriority = (complaintType: string) => {
+    switch (complaintType) {
+      case 'panne-totale':
+        return 'critical';
+      case 'debit-lent':
+      case 'connexion-instable':
+        return 'high';
+      case 'installation':
+      case 'facturation':
+        return 'medium';
+      case 'maintenance':
+        return 'low';
+      default:
+        return 'medium';
+    }
+  };
+
   const handleCreateComplaint = async () => {
-    if (!newComplaint.clientName || !newComplaint.complaintType || !newComplaint.priority) {
+    if (!newComplaint.clientName || !newComplaint.complaintType) {
       toast({
         title: "Erreur",
         description: "Veuillez remplir tous les champs obligatoires",
@@ -62,11 +79,14 @@ const ComplaintForm = () => {
       // Generate complaint number
       const complaintNumber = `REC-${Date.now().toString().slice(-6)}`;
       
+      // Déterminer automatiquement la priorité
+      const automaticPriority = determineAutomaticPriority(newComplaint.complaintType);
+      
       await createComplaint.mutateAsync({
         client_name: newComplaint.clientName,
         client_address: newComplaint.clientAddress || null,
         complaint_type: newComplaint.complaintType,
-        priority: newComplaint.priority,
+        priority: automaticPriority,
         description: newComplaint.description,
         complaint_number: complaintNumber,
         status: 'open',
@@ -76,7 +96,7 @@ const ComplaintForm = () => {
 
       toast({
         title: "Ticket créé avec succès",
-        description: `Le ticket ${complaintNumber} a été créé et un technicien sera automatiquement assigné.`,
+        description: `Le ticket ${complaintNumber} a été créé avec priorité ${automaticPriority === 'critical' ? 'critique' : automaticPriority === 'high' ? 'haute' : automaticPriority === 'medium' ? 'moyenne' : 'basse'} et un technicien sera automatiquement assigné.`,
       });
 
       // Reset form
@@ -84,7 +104,6 @@ const ComplaintForm = () => {
         clientName: '',
         clientAddress: '',
         complaintType: '',
-        priority: '',
         description: '',
         voipNumber: ''
       });
@@ -137,39 +156,25 @@ const ComplaintForm = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="complaintType">Type de problème *</Label>
-            <Select value={newComplaint.complaintType} onValueChange={(value) => setNewComplaint({ ...newComplaint, complaintType: value })}>
-              <SelectTrigger>
-                <SelectValue placeholder="Sélectionner le type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="debit-lent">Débit lent</SelectItem>
-                <SelectItem value="panne-totale">Panne totale</SelectItem>
-                <SelectItem value="connexion-instable">Connexion instable</SelectItem>
-                <SelectItem value="installation">Problème d'installation</SelectItem>
-                <SelectItem value="facturation">Problème de facturation</SelectItem>
-                <SelectItem value="maintenance">Maintenance préventive</SelectItem>
-                <SelectItem value="autre">Autre</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="priority">Priorité *</Label>
-            <Select value={newComplaint.priority} onValueChange={(value) => setNewComplaint({ ...newComplaint, priority: value })}>
-              <SelectTrigger>
-                <SelectValue placeholder="Niveau de priorité" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="critical">Critique</SelectItem>
-                <SelectItem value="high">Haute</SelectItem>
-                <SelectItem value="medium">Moyenne</SelectItem>
-                <SelectItem value="low">Basse</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+        <div className="space-y-2">
+          <Label htmlFor="complaintType">Type de problème *</Label>
+          <Select value={newComplaint.complaintType} onValueChange={(value) => setNewComplaint({ ...newComplaint, complaintType: value })}>
+            <SelectTrigger>
+              <SelectValue placeholder="Sélectionner le type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="debit-lent">Débit lent</SelectItem>
+              <SelectItem value="panne-totale">Panne totale</SelectItem>
+              <SelectItem value="connexion-instable">Connexion instable</SelectItem>
+              <SelectItem value="installation">Problème d'installation</SelectItem>
+              <SelectItem value="facturation">Problème de facturation</SelectItem>
+              <SelectItem value="maintenance">Maintenance préventive</SelectItem>
+              <SelectItem value="autre">Autre</SelectItem>
+            </SelectContent>
+          </Select>
+          <p className="text-sm text-gray-500">
+            La priorité sera automatiquement déterminée selon le type de problème
+          </p>
         </div>
 
         <div className="space-y-2">
@@ -190,7 +195,7 @@ const ComplaintForm = () => {
               <h4 className="font-medium text-blue-900">Assignation Intelligente</h4>
               <p className="text-sm text-blue-700">
                 Le système assignera automatiquement le technicien le plus approprié selon la zone géographique, 
-                la spécialité technique et la charge de travail actuelle.
+                la spécialité technique et la charge de travail actuelle. La priorité est déterminée automatiquement.
               </p>
             </div>
           </div>
