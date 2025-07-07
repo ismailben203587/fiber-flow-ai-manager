@@ -6,12 +6,19 @@ import ComplaintForm from "@/components/ComplaintForm";
 import ClientSearch from "@/components/ClientSearch";
 import DashboardNavigation from "@/components/DashboardNavigation";
 import { Building2, Users, ShoppingCart, Plus, Search } from "lucide-react";
+import { useState } from "react";
 
 interface CommercialDashboardProps {
   onGoHome: () => void;
 }
 
 const CommercialDashboard = ({ onGoHome }: CommercialDashboardProps) => {
+  const [activeTab, setActiveTab] = useState("commands");
+
+  const handleNavigateToOrders = () => {
+    setActiveTab("search");
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-cyan-50">
       <div className="container mx-auto p-6">
@@ -26,9 +33,9 @@ const CommercialDashboard = ({ onGoHome }: CommercialDashboardProps) => {
           </p>
         </div>
 
-        <CommercialStats />
+        <CommercialStats onNavigateToOrders={handleNavigateToOrders} />
 
-        <Tabs defaultValue="commands" className="space-y-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="grid w-full grid-cols-4 bg-emerald-50">
             <TabsTrigger value="commands" className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white">
               <ShoppingCart className="h-4 w-4 mr-2" />

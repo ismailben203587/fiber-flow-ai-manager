@@ -1,11 +1,14 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, Users, ShoppingCart, CheckCircle } from "lucide-react";
 import { useFTTHOrders } from "@/hooks/useOrders";
 import { useCustomerComplaints } from "@/hooks/useComplaints";
 
-const CommercialStats = () => {
+interface CommercialStatsProps {
+  onNavigateToOrders?: () => void;
+}
+
+const CommercialStats = ({ onNavigateToOrders }: CommercialStatsProps) => {
   const { data: orders = [], isLoading: ordersLoading } = useFTTHOrders();
   const { data: complaints = [], isLoading: complaintsLoading } = useCustomerComplaints();
 
@@ -17,7 +20,10 @@ const CommercialStats = () => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-      <Card className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white">
+      <Card 
+        className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white cursor-pointer hover:shadow-lg transition-shadow"
+        onClick={onNavigateToOrders}
+      >
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Total Commandes</CardTitle>
           <ShoppingCart className="h-4 w-4" />
@@ -28,6 +34,9 @@ const CommercialStats = () => {
           </div>
           <p className="text-xs opacity-90">
             {ordersLoading ? "Chargement..." : `${pendingOrders} en attente`}
+          </p>
+          <p className="text-xs opacity-75 mt-1">
+            Cliquez pour voir vos commandes
           </p>
         </CardContent>
       </Card>

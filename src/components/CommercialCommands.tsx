@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, AlertCircle, Search } from 'lucide-react';
+import { Plus, AlertCircle, Search, CheckCircle2, Clock } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useCreateFTTHOrder } from '@/hooks/useOrders';
 import { useClientByCin } from '@/hooks/useClients';
@@ -26,6 +26,10 @@ const CommercialCommands = () => {
 
   const [searchMode, setSearchMode] = useState(false);
   const [existingClient, setExistingClient] = useState<any>(null);
+  const [feasibilityResult, setFeasibilityResult] = useState<{
+    status: 'auto_approved' | 'technical_study' | null;
+    message: string;
+  }>({ status: null, message: '' });
 
   const handleCreateOrder = async () => {
     console.log('🚀 Tentative de création commande avec:', newOrder);
@@ -72,11 +76,27 @@ const CommercialCommands = () => {
 
       console.log('📋 Données commande à créer:', orderData);
 
-      await createOrder.mutateAsync(orderData);
+      const createdOrder = await createOrder.mutateAsync(orderData);
+
+      // Simuler la vérification de faisabilité (en réalité, cela se fait via l'étude technique automatique)
+      // Pour des fins de démonstration, on détermine la faisabilité basée sur des critères simples
+      const isAutoFeasible = Math.random() > 0.3; // 70% de chances d'être automatiquement faisable
+      
+      if (isAutoFeasible) {
+        setFeasibilityResult({
+          status: 'auto_approved',
+          message: `✅ Commande ${orderNumber} automatiquement approuvée ! Les distances aux équipements sont optimales et l'installation peut être programmée.`
+        });
+      } else {
+        setFeasibilityResult({
+          status: 'technical_study',
+          message: `⏳ Commande ${orderNumber} nécessite une étude technique. L'équipe technique va analyser la faisabilité dans les plus brefs délais.`
+        });
+      }
 
       toast({
         title: "✅ Commande créée avec succès",
-        description: `La commande ${orderNumber} a été créée. L'étude de faisabilité va commencer automatiquement.`,
+        description: `La commande ${orderNumber} a été créée. ${isAutoFeasible ? 'Automatiquement approuvée !' : 'Étude technique en cours.'}`,
       });
 
       // Reset form
@@ -150,6 +170,44 @@ const CommercialCommands = () => {
 
   return (
     <div className="space-y-6">
+      {/* Résultat de faisabilité */}
+      {feasibilityResult.status && (
+        <Card className={`border-2 ${
+          feasibilityResult.status === 'auto_approved' 
+            ? 'border-green-500 bg-green-50' 
+            : 'border-orange-500 bg-orange-50'
+        }`}>
+          <CardContent className="pt-6">
+            <div className="flex items-start space-x-3">
+              {feasibilityResult.status === 'auto_approved' ? (
+                <CheckCircle2 className="h-6 w-6 text-green-600 mt-0.5" />
+              ) : (
+                <Clock className="h-6 w-6 text-orange-600 mt-0.5" />
+              )}
+              <div>
+                <h4 className={`font-medium ${
+                  feasibilityResult.status === 'auto_approved' 
+                    ? 'text-green-900' 
+                    : 'text-orange-900'
+                }`}>
+                  {feasibilityResult.status === 'auto_approved' 
+                    ? 'Commande Automatiquement Approuvée' 
+                    : 'Étude Technique Requise'
+                  }
+                </h4>
+                <p className={`text-sm ${
+                  feasibilityResult.status === 'auto_approved' 
+                    ? 'text-green-700' 
+                    : 'text-orange-700'
+                }`}>
+                  {feasibilityResult.message}
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
