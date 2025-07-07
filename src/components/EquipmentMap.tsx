@@ -1,10 +1,10 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { MapPin, Activity, AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
+import GoogleMapsWrapper from './GoogleMapsWrapper';
 
 const EquipmentMap = () => {
   const [selectedEquipment, setSelectedEquipment] = useState(null);
@@ -25,6 +25,11 @@ const EquipmentMap = () => {
     } else {
       return { color: 'bg-green-500', badge: 'bg-green-100 text-green-800', icon: CheckCircle };
     }
+  };
+
+  const handleEquipmentClick = (equipment: any) => {
+    setSelectedEquipment(equipment);
+    console.log('Équipement sélectionné:', equipment);
   };
 
   const zoneStats = {
@@ -52,7 +57,7 @@ const EquipmentMap = () => {
 
         <TabsContent value="map" className="space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Carte simulée */}
+            {/* Google Maps */}
             <div className="lg:col-span-2">
               <Card>
                 <CardHeader>
@@ -62,26 +67,15 @@ const EquipmentMap = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="relative h-96 bg-gradient-to-br from-blue-50 to-green-50 rounded-lg border overflow-hidden">
-                    {/* Simuler une carte avec des points d'équipement */}
-                    <div className="absolute inset-0 bg-gray-100 opacity-50"></div>
-                    <div className="relative h-full flex items-center justify-center">
-                      <div className="text-center space-y-4">
-                        <MapPin className="h-12 w-12 text-blue-600 mx-auto" />
-                        <div>
-                          <h3 className="font-semibold text-gray-900">Carte Interactive</h3>
-                          <p className="text-sm text-gray-600">
-                            Intégration Leaflet/Google Maps à venir
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    {/* Points d'équipement simulés */}
-                    <div className="absolute top-1/4 left-1/3 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg animate-pulse cursor-pointer"></div>
-                    <div className="absolute top-1/2 left-1/2 w-4 h-4 bg-orange-500 rounded-full border-2 border-white shadow-lg animate-pulse cursor-pointer"></div>
-                    <div className="absolute top-3/4 right-1/3 w-4 h-4 bg-red-500 rounded-full border-2 border-white shadow-lg animate-pulse cursor-pointer"></div>
-                    <div className="absolute bottom-1/4 left-1/4 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg animate-pulse cursor-pointer"></div>
+                  <GoogleMapsWrapper 
+                    equipments={equipments} 
+                    onEquipmentClick={handleEquipmentClick}
+                  />
+                  <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <p className="text-sm text-yellow-800">
+                      <strong>Note:</strong> Pour utiliser Google Maps, ajoutez votre clé API dans les variables d'environnement : 
+                      <code className="bg-yellow-100 px-1 rounded">REACT_APP_GOOGLE_MAPS_API_KEY</code>
+                    </p>
                   </div>
                 </CardContent>
               </Card>
@@ -141,6 +135,26 @@ const EquipmentMap = () => {
                   })}
                 </CardContent>
               </Card>
+
+              {selectedEquipment && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">Équipement Sélectionné</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      <p className="font-medium">{selectedEquipment.id}</p>
+                      <p className="text-sm text-gray-600">{selectedEquipment.location}</p>
+                      <div className="flex items-center gap-2">
+                        <Badge className={getStatusInfo(selectedEquipment.status, selectedEquipment.capacity).badge}>
+                          {selectedEquipment.status}
+                        </Badge>
+                        <span className="text-sm">{selectedEquipment.capacity}%</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
             </div>
           </div>
         </TabsContent>
