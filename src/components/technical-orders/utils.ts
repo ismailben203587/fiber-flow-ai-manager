@@ -13,38 +13,39 @@ export const filterTechnicalOrders = (orders: any[]): TechnicalOrder[] => {
       distance_to_msan: order.distance_to_msan
     });
     
-    // Exclure les commandes déjà traitées (approuvées ou avec status final)
+    // EXCLUSION PRIORITAIRE : Exclure toutes les commandes déjà traitées
     if (order.feasibility_status === 'approved') {
-      console.log(`✅ Commande ${order.order_number} déjà approuvée - exclue`);
+      console.log(`✅ Commande ${order.order_number} déjà approuvée - EXCLUE`);
       return false;
     }
     
     if (order.status === 'rejected' || order.status === 'feasible' || order.status === 'completed') {
-      console.log(`❌ Commande ${order.order_number} avec status final - exclue`);
+      console.log(`❌ Commande ${order.order_number} avec status final - EXCLUE`);
       return false;
     }
-    
-    // NE PAS auto-valider ici - les commandes faisables doivent rester en attente
-    // pour être traitées par l'équipe technique si nécessaire
-    
-    // Critères pour nécessiter une étude technique:
-    // 1. Commandes en révision technique (rejetées mais en cours de réévaluation)
-    // 2. Commandes avec distances importantes (> 2km pour PCO ou > 5km pour MSAN)
-    // 3. Commandes sans distances calculées (nécessitent analyse)
-    // 4. Commandes en attente avec des conditions particulières
+
+    // INCLUSION : Critères pour nécessiter une étude technique
     const needsTechnicalStudy = 
+      // Commandes en révision technique (rejetées mais en cours de réévaluation)
       (order.feasibility_status === 'rejected' && order.status === 'technical_review') ||
+      // Commandes avec distances importantes
       (order.distance_to_pco && order.distance_to_pco > 2) ||
       (order.distance_to_msan && order.distance_to_msan > 5) ||
+      // Commandes en attente sans distances ou avec conditions particulières
       (order.feasibility_status === 'pending' && 
        (!order.distance_to_pco || !order.distance_to_msan)) ||
       (order.feasibility_status === 'pending' && order.status === 'pending');
     
-    console.log(`📏 Commande ${order.order_number} nécessite étude:`, needsTechnicalStudy);
+    if (needsTechnicalStudy) {
+      console.log(`🔧 Commande ${order.order_number} INCLUSE pour étude technique`);
+    } else {
+      console.log(`✨ Commande ${order.order_number} ne nécessite pas d'étude - EXCLUE`);
+    }
+    
     return needsTechnicalStudy;
   });
 
-  console.log('🔧 Commandes pour étude technique:', technicalOrders);
+  console.log(`🎯 Résultat final: ${technicalOrders.length} commandes pour étude technique sur ${orders.length} commandes totales`);
   return technicalOrders;
 };
 
@@ -71,7 +72,7 @@ export const autoValidateFeasibleOrders = async (orders: any[], updateOrderCallb
           recommendations: ['Commande automatiquement validée', 'Installation programmable']
         }
       });
-      console.log(`✅ Commande ${order.order_number} auto-validée`);
+      console.log(`✅ Commande ${order.order_number} auto-validée avec succès`);
     } catch (error) {
       console.error(`❌ Erreur auto-validation ${order.order_number}:`, error);
     }
