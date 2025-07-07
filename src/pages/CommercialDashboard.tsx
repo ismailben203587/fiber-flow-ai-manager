@@ -4,8 +4,9 @@ import CommercialStats from "@/components/CommercialStats";
 import CommercialCommands from "@/components/CommercialCommands";
 import ComplaintForm from "@/components/ComplaintForm";
 import ClientSearch from "@/components/ClientSearch";
+import OrdersList from "@/components/OrdersList";
 import DashboardNavigation from "@/components/DashboardNavigation";
-import { Building2, Users, ShoppingCart, Plus, Search } from "lucide-react";
+import { Building2, Users, ShoppingCart, Plus, Search, List } from "lucide-react";
 import { useState } from "react";
 
 interface CommercialDashboardProps {
@@ -16,7 +17,7 @@ const CommercialDashboard = ({ onGoHome }: CommercialDashboardProps) => {
   const [activeTab, setActiveTab] = useState("commands");
 
   const handleNavigateToOrders = () => {
-    setActiveTab("search");
+    setActiveTab("orders");
   };
 
   return (
@@ -36,10 +37,14 @@ const CommercialDashboard = ({ onGoHome }: CommercialDashboardProps) => {
         <CommercialStats onNavigateToOrders={handleNavigateToOrders} />
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 bg-emerald-50">
+          <TabsList className="grid w-full grid-cols-5 bg-emerald-50">
             <TabsTrigger value="commands" className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white">
               <ShoppingCart className="h-4 w-4 mr-2" />
               Nouvelle Commande
+            </TabsTrigger>
+            <TabsTrigger value="orders" className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white">
+              <List className="h-4 w-4 mr-2" />
+              Mes Commandes
             </TabsTrigger>
             <TabsTrigger value="tickets" className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white">
               <Plus className="h-4 w-4 mr-2" />
@@ -57,6 +62,10 @@ const CommercialDashboard = ({ onGoHome }: CommercialDashboardProps) => {
 
           <TabsContent value="commands" className="space-y-6">
             <CommercialCommands />
+          </TabsContent>
+
+          <TabsContent value="orders" className="space-y-6">
+            <OrdersList />
           </TabsContent>
 
           <TabsContent value="tickets" className="space-y-6">

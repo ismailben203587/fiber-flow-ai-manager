@@ -14,25 +14,18 @@ export const filterTechnicalOrders = (orders: any[]): TechnicalOrder[] => {
     });
     
     // Exclure les commandes déjà traitées (approuvées ou avec status final)
-    if (order.feasibility_status === 'approved' && order.status === 'feasible') {
+    if (order.feasibility_status === 'approved') {
       console.log(`✅ Commande ${order.order_number} déjà approuvée - exclue`);
       return false;
     }
     
-    if (order.status === 'rejected') {
-      console.log(`❌ Commande ${order.order_number} définitivement rejetée - exclue`);
+    if (order.status === 'rejected' || order.status === 'feasible' || order.status === 'completed') {
+      console.log(`❌ Commande ${order.order_number} avec status final - exclue`);
       return false;
     }
     
-    // Auto-validation des commandes faisables :
-    // Si les distances sont calculées et acceptables, marquer comme faisable automatiquement
-    if (order.feasibility_status === 'pending' && 
-        order.distance_to_pco && order.distance_to_msan &&
-        order.distance_to_pco <= 2 && order.distance_to_msan <= 5) {
-      console.log(`✅ Commande ${order.order_number} automatiquement faisable`);
-      // Cette commande sera validée automatiquement par le système
-      return false; // Ne pas l'envoyer vers l'équipe technique
-    }
+    // NE PAS auto-valider ici - les commandes faisables doivent rester en attente
+    // pour être traitées par l'équipe technique si nécessaire
     
     // Critères pour nécessiter une étude technique:
     // 1. Commandes en révision technique (rejetées mais en cours de réévaluation)
@@ -44,7 +37,8 @@ export const filterTechnicalOrders = (orders: any[]): TechnicalOrder[] => {
       (order.distance_to_pco && order.distance_to_pco > 2) ||
       (order.distance_to_msan && order.distance_to_msan > 5) ||
       (order.feasibility_status === 'pending' && 
-       (!order.distance_to_pco || !order.distance_to_msan));
+       (!order.distance_to_pco || !order.distance_to_msan)) ||
+      (order.feasibility_status === 'pending' && order.status === 'pending');
     
     console.log(`📏 Commande ${order.order_number} nécessite étude:`, needsTechnicalStudy);
     return needsTechnicalStudy;
@@ -54,12 +48,13 @@ export const filterTechnicalOrders = (orders: any[]): TechnicalOrder[] => {
   return technicalOrders;
 };
 
-// Nouvelle fonction pour l'auto-validation des commandes faisables
+// Fonction pour l'auto-validation des commandes faisables
 export const autoValidateFeasibleOrders = async (orders: any[], updateOrderCallback: (id: string, updates: any) => Promise<void>) => {
   const feasibleOrders = orders.filter(order => 
     order.feasibility_status === 'pending' && 
     order.distance_to_pco && order.distance_to_msan &&
-    order.distance_to_pco <= 2 && order.distance_to_msan <= 5
+    order.distance_to_pco <= 2 && order.distance_to_msan <= 5 &&
+    order.status === 'pending'
   );
 
   console.log(`🚀 Auto-validation de ${feasibleOrders.length} commandes faisables`);
