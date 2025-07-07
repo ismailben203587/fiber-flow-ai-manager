@@ -44,8 +44,8 @@ const render = (status: Status) => {
 };
 
 const GoogleMapsWrapper: React.FC<GoogleMapsWrapperProps> = ({ equipments, onEquipmentClick }) => {
-  // Clé API Google Maps - À remplacer par votre vraie clé
-  const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY || 'VOTRE_CLE_API_GOOGLE_MAPS';
+  // Utilisation d'une clé API de démonstration - remplacez par votre vraie clé
+  const apiKey = 'DEMO_API_KEY';
 
   return (
     <Wrapper apiKey={apiKey} render={render}>
