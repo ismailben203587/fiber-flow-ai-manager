@@ -71,10 +71,9 @@ const EquipmentMap = () => {
                     equipments={equipments} 
                     onEquipmentClick={handleEquipmentClick}
                   />
-                  <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                    <p className="text-sm text-yellow-800">
-                      <strong>Note:</strong> Pour utiliser Google Maps, ajoutez votre clé API dans les variables d'environnement : 
-                      <code className="bg-yellow-100 px-1 rounded">REACT_APP_GOOGLE_MAPS_API_KEY</code>
+                  <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                    <p className="text-sm text-blue-800">
+                      <strong>Configuration:</strong> Ajoutez votre clé API Google Maps dans les secrets Supabase pour activer la carte interactive.
                     </p>
                   </div>
                 </CardContent>
