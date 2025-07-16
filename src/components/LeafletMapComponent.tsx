@@ -56,20 +56,24 @@ const LeafletMapComponent: React.FC<LeafletMapComponentProps> = ({
   equipments, 
   onEquipmentClick 
 }) => {
+  console.log('LeafletMapComponent rendering with equipments:', equipments);
+  
+  // Ensure we have a fallback for equipments
+  const safeEquipments = equipments || [];
   // Default center on Paris
   const defaultCenter: [number, number] = [48.8566, 2.3522];
   
+  
   // Calculate map bounds to fit all equipment
-  const bounds = equipments.length > 0 
-    ? equipments.map(eq => [eq.lat, eq.lng] as [number, number])
+  const bounds = safeEquipments.length > 0 
+    ? safeEquipments.map(eq => [eq.lat, eq.lng] as [number, number])
     : [defaultCenter];
 
   return (
     <div className="w-full h-96 rounded-lg overflow-hidden">
       <MapContainer
         center={defaultCenter}
-        zoom={equipments.length > 0 ? undefined : 12}
-        bounds={equipments.length > 0 ? bounds : undefined}
+        zoom={12}
         style={{ height: '100%', width: '100%' }}
         className="z-0"
       >
@@ -78,7 +82,7 @@ const LeafletMapComponent: React.FC<LeafletMapComponentProps> = ({
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         
-        {equipments.map((equipment) => (
+        {safeEquipments.map((equipment) => (
           <Marker
             key={equipment.id}
             position={[equipment.lat, equipment.lng]}

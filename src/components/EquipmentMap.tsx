@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { MapPin, Activity, AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
-import MapWrapper from './GoogleMapsWrapper';
+import MapWrapper from './MapWrapper';
 
 const EquipmentMap = () => {
   const [selectedEquipment, setSelectedEquipment] = useState(null);
