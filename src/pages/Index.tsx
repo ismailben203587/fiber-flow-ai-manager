@@ -5,6 +5,7 @@ import { ArrowRight, BarChart3, Settings, Users, ShieldCheck } from "lucide-reac
 import { useAuth } from "@/hooks/useAuth";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { AuthPage } from "./AuthPage";
+import AIBackground from "@/components/AIBackground";
 import CommercialDashboard from "./CommercialDashboard";
 import TechnicalDashboard from "./TechnicalDashboard";
 import AdminDashboard from "./AdminDashboard";
@@ -54,8 +55,9 @@ const Index = () => {
 
   // Show dashboard selection for admin users or fallback
   return (
-    <div className="min-h-screen">
-      <div className="container mx-auto p-6 space-y-8">
+    <div className="min-h-screen relative">
+      <AIBackground />
+      <div className="container mx-auto p-6 space-y-8 relative z-10">
         <div className="flex justify-end mb-6">
           <ThemeToggle />
         </div>
