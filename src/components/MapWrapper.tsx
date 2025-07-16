@@ -1,5 +1,5 @@
 import React from 'react';
-import LeafletMapComponent from './LeafletMapComponent';
+import SimpleLeafletMap from './SimpleLeafletMap';
 
 interface Equipment {
   id: string;
@@ -19,7 +19,7 @@ interface MapWrapperProps {
 const MapWrapper: React.FC<MapWrapperProps> = ({ equipments, onEquipmentClick }) => {
   return (
     <div className="w-full">
-      <LeafletMapComponent equipments={equipments} onEquipmentClick={onEquipmentClick} />
+      <SimpleLeafletMap equipments={equipments} onEquipmentClick={onEquipmentClick} />
       <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
         <p className="text-sm text-green-800">
           <strong>✅ Carte OpenStreetMap :</strong> Carte interactive gratuite sans clé API requise.
