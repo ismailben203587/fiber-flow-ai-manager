@@ -7,6 +7,7 @@ import EquipmentMap from "@/components/EquipmentMap";
 import TechnicalOrders from "@/components/TechnicalOrders";
 import TechnicalReports from "@/components/TechnicalReports";
 import DashboardNavigation from "@/components/DashboardNavigation";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { Network, Router, MapPin, AlertCircle, Wrench, FileText } from "lucide-react";
 
 interface TechnicalDashboardProps {
@@ -16,6 +17,9 @@ interface TechnicalDashboardProps {
 const TechnicalDashboard = ({ onGoHome }: TechnicalDashboardProps) => {
   return (
     <div className="min-h-screen">
+      <div className="absolute top-4 right-4 z-10">
+        <ThemeToggle />
+      </div>
       <div className="container mx-auto p-6">
         <DashboardNavigation onGoHome={onGoHome} />
         

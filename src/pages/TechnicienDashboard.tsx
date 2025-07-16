@@ -1,4 +1,5 @@
 import DashboardNavigation from '@/components/DashboardNavigation';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -20,6 +21,9 @@ interface TechnicienDashboardProps {
 const TechnicienDashboard = ({ onGoHome }: TechnicienDashboardProps) => {
   return (
     <div className="min-h-screen">
+      <div className="absolute top-4 right-4 z-10">
+        <ThemeToggle />
+      </div>
       <div className="container mx-auto p-6 space-y-8">
         <DashboardNavigation onGoHome={onGoHome} />
         

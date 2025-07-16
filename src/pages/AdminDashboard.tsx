@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import DashboardNavigation from '@/components/DashboardNavigation';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import CommercialDashboard from './CommercialDashboard';
 import TechnicalDashboard from './TechnicalDashboard';
 import { Users, Shield, Settings, BarChart3 } from 'lucide-react';
@@ -19,6 +20,9 @@ const AdminDashboard = ({ onGoHome }: AdminDashboardProps) => {
 
   return (
     <div className="min-h-screen">
+      <div className="absolute top-4 right-4 z-10">
+        <ThemeToggle />
+      </div>
       <div className="container mx-auto p-6 space-y-8">
         <DashboardNavigation onGoHome={onGoHome} />
         
