@@ -141,11 +141,6 @@ All colors MUST be HSL.
     min-height: 100vh;
   }
   
-  /* Default to dark theme */
-  :root {
-    @apply dark;
-  }
-  
   .gradient-primary {
     background: var(--gradient-primary);
   }

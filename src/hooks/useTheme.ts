@@ -24,12 +24,12 @@ export const useThemeProvider = () => {
     if (savedTheme) {
       return savedTheme;
     }
-    // Default to dark theme as it was the current theme
+    // Default to dark theme (keeping current behavior)
     return 'dark';
   });
 
   useEffect(() => {
-    // Apply theme class to document element
+    // Apply theme class to document element immediately
     const root = document.documentElement;
     root.classList.remove('light', 'dark');
     root.classList.add(theme);
@@ -39,7 +39,18 @@ export const useThemeProvider = () => {
     
     // Save theme to localStorage
     localStorage.setItem('theme', theme);
+    
+    console.log('Theme applied:', theme, 'Root classes:', root.className);
   }, [theme]);
+
+  // Apply initial theme immediately on mount
+  useEffect(() => {
+    const root = document.documentElement;
+    if (!root.classList.contains('light') && !root.classList.contains('dark')) {
+      root.classList.add(theme);
+      console.log('Initial theme applied:', theme);
+    }
+  }, []);
 
   const toggleTheme = () => {
     setTheme(prev => prev === 'dark' ? 'light' : 'dark');
