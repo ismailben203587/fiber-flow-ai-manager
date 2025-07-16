@@ -9,7 +9,72 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Modern dark theme inspired by the uploaded image */
+    /* Light theme */
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+
+    --primary: 270 60% 65%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 200 100% 60%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+
+    --accent: 180 100% 65%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 270 60% 65%;
+
+    --radius: 1rem;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 270 60% 65%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 240 5.9% 90%;
+    --sidebar-ring: 270 60% 65%;
+
+    /* Enhanced color palette */
+    --telecom-blue: 214 100% 50%;
+    --telecom-orange: 32 100% 55%;
+    --success-green: 142 76% 45%;
+    --warning-yellow: 48 96% 53%;
+    --danger-red: 0 84% 60%;
+    
+    /* Light theme colors */
+    --neural-light: 0 0% 100%;
+    --neural-lighter: 0 0% 98%;
+    --neural-blue: 200 100% 60%;
+    --neural-green: 142 76% 45%;
+    --neural-purple: 270 60% 65%;
+    --neural-pink: 330 60% 65%;
+    --neural-cyan: 180 100% 65%;
+    --neural-teal: 170 76% 45%;
+    
+    /* Light theme gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(270 60% 65%) 0%, hsl(200 100% 60%) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(180 100% 65%) 0%, hsl(170 76% 45%) 100%);
+    --gradient-card: linear-gradient(135deg, hsl(0 0% 100% / 0.8) 0%, hsl(240 4.8% 95.9% / 0.8) 100%);
+    --gradient-background: linear-gradient(135deg, hsl(0 0% 100%) 0%, hsl(240 4.8% 98%) 50%, hsl(210 100% 98%) 100%);
+  }
+
+  .dark {
+    /* Dark theme */
     --background: 230 25% 8%;
     --foreground: 210 40% 98%;
 
@@ -38,8 +103,6 @@ All colors MUST be HSL.
     --input: 230 25% 16%;
     --ring: 270 60% 65%;
 
-    --radius: 1rem;
-
     --sidebar-background: 230 25% 10%;
     --sidebar-foreground: 210 40% 98%;
     --sidebar-primary: 270 60% 65%;
@@ -48,15 +111,8 @@ All colors MUST be HSL.
     --sidebar-accent-foreground: 210 40% 98%;
     --sidebar-border: 230 25% 20%;
     --sidebar-ring: 270 60% 65%;
-
-    /* Enhanced color palette */
-    --telecom-blue: 214 100% 50%;
-    --telecom-orange: 32 100% 55%;
-    --success-green: 142 76% 45%;
-    --warning-yellow: 48 96% 53%;
-    --danger-red: 0 84% 60%;
     
-    /* Neural theme colors matching the uploaded image */
+    /* Dark theme colors */
     --neural-dark: 230 25% 8%;
     --neural-darker: 230 25% 4%;
     --neural-blue: 200 100% 60%;
@@ -66,41 +122,11 @@ All colors MUST be HSL.
     --neural-cyan: 180 100% 65%;
     --neural-teal: 170 76% 45%;
     
-    /* Gradient definitions */
+    /* Dark theme gradients */
     --gradient-primary: linear-gradient(135deg, hsl(270 60% 65%) 0%, hsl(200 100% 60%) 100%);
     --gradient-secondary: linear-gradient(135deg, hsl(180 100% 65%) 0%, hsl(170 76% 45%) 100%);
     --gradient-card: linear-gradient(135deg, hsl(230 25% 12% / 0.8) 0%, hsl(230 25% 16% / 0.8) 100%);
     --gradient-background: linear-gradient(135deg, hsl(230 25% 8%) 0%, hsl(270 60% 12%) 50%, hsl(200 100% 8%) 100%);
-  }
-
-  .dark {
-    --background: 230 25% 8%;
-    --foreground: 210 40% 98%;
-    --card: 230 25% 12%;
-    --card-foreground: 210 40% 98%;
-    --popover: 230 25% 12%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 270 60% 65%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 200 100% 60%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 230 25% 16%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 180 100% 65%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 230 25% 20%;
-    --input: 230 25% 16%;
-    --ring: 270 60% 65%;
-    --sidebar-background: 230 25% 10%;
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 270 60% 65%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 230 25% 16%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 230 25% 20%;
-    --sidebar-ring: 270 60% 65%;
   }
 }
 
@@ -113,6 +139,11 @@ All colors MUST be HSL.
     @apply text-foreground font-sans;
     background: var(--gradient-background);
     min-height: 100vh;
+  }
+  
+  /* Default to dark theme */
+  :root {
+    @apply dark;
   }
   
   .gradient-primary {

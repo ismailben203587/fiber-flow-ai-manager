@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, BarChart3, Settings, Users, ShieldCheck } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { AuthPage } from "./AuthPage";
 import CommercialDashboard from "./CommercialDashboard";
 import TechnicalDashboard from "./TechnicalDashboard";
@@ -54,6 +55,9 @@ const Index = () => {
   // Show dashboard selection for admin users or fallback
   return (
     <div className="min-h-screen">
+      <div className="absolute top-4 right-4 z-10">
+        <ThemeToggle />
+      </div>
       <div className="container mx-auto p-6 space-y-8">
         <div className="text-center space-y-4">
           <h1 className="text-5xl font-bold gradient-neural bg-clip-text text-transparent animate-float">
