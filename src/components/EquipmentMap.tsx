@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { MapPin, Activity, AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
-import GoogleMapsWrapper from './GoogleMapsWrapper';
+import MapWrapper from './GoogleMapsWrapper';
 
 const EquipmentMap = () => {
   const [selectedEquipment, setSelectedEquipment] = useState(null);
@@ -67,15 +67,10 @@ const EquipmentMap = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <GoogleMapsWrapper 
+                  <MapWrapper 
                     equipments={equipments} 
                     onEquipmentClick={handleEquipmentClick}
                   />
-                  <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                    <p className="text-sm text-blue-800">
-                      <strong>Configuration:</strong> Ajoutez votre clé API Google Maps dans les secrets Supabase pour activer la carte interactive.
-                    </p>
-                  </div>
                 </CardContent>
               </Card>
             </div>
