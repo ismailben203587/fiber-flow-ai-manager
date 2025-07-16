@@ -24,7 +24,7 @@ const AdminDashboard = ({ onGoHome }: AdminDashboardProps) => {
         
         <div className="text-center space-y-4">
           <h1 className="text-4xl font-bold gradient-primary bg-clip-text text-transparent animate-float">
-            Tableau de Bord Administrateur
+            SMART TELECOM Administrateur
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Gestion complète du système et accès à tous les tableaux de bord

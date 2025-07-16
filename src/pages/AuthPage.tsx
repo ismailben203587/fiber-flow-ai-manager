@@ -46,10 +46,10 @@ export function AuthPage() {
 
 
   const demoAccounts = [
-    { name: 'Neural Admin', email: 'admin@ftth.ma', role: 'admin', color: 'from-neural-pink to-neural-purple' },
-    { name: 'Commerce AI', email: 'commercial@ftth.ma', role: 'commercial', color: 'from-neural-cyan to-neural-blue' },
-    { name: 'Tech Matrix', email: 'tech@ftth.ma', role: 'tech', color: 'from-neural-green to-neural-cyan' },
-    { name: 'Cyber Supervisor', email: 'supervisor@ftth.ma', role: 'technicien', color: 'from-neural-purple to-neural-pink' }
+    { name: 'Admin', email: 'admin@ftth.ma', role: 'admin', color: 'from-neural-pink to-neural-purple' },
+    { name: 'Commercial', email: 'commercial@ftth.ma', role: 'commercial', color: 'from-neural-cyan to-neural-blue' },
+    { name: 'Service Technique', email: 'tech@ftth.ma', role: 'tech', color: 'from-neural-green to-neural-cyan' },
+    { name: 'Technicien', email: 'supervisor@ftth.ma', role: 'technicien', color: 'from-neural-purple to-neural-pink' }
   ];
 
   const handleDemoLogin = async (email: string) => {
@@ -131,7 +131,7 @@ export function AuthPage() {
             <Wifi className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-2xl font-bold text-neural-blue mb-2">
-            Tableau de Bord
+            SMART TELECOM
           </h1>
           <p className="text-neural-blue/70 text-sm">
             Connectez-vous pour accéder à votre espace de travail

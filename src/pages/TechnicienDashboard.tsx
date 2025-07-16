@@ -25,7 +25,7 @@ const TechnicienDashboard = ({ onGoHome }: TechnicienDashboardProps) => {
         
         <div className="text-center space-y-4">
           <h1 className="text-4xl font-bold gradient-warning bg-clip-text text-transparent animate-float">
-            Tableau de Bord Technicien
+            SMART TELECOM Technicien
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Gestion de vos interventions et tickets assignés
