@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { Wifi, Shield, Users } from 'lucide-react';
+import NeuralNetworkBackground from '@/components/NeuralNetworkBackground';
 import { supabase } from '@/integrations/supabase/client';
 
 export function AuthPage() {
@@ -119,6 +120,9 @@ export function AuthPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-neural-darker via-neural-dark to-neural-dark flex items-center justify-center p-6 relative overflow-hidden">
+      {/* Neural Network Background */}
+      <NeuralNetworkBackground />
+      
       {/* Background effects */}
       <div className="absolute inset-0 bg-gradient-to-r from-neural-blue/5 via-transparent to-neural-cyan/5" />
       <div className="absolute top-10 left-10 w-32 h-32 bg-neural-blue/10 rounded-full blur-3xl" />
