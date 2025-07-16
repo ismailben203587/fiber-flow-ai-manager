@@ -29,15 +29,7 @@ serve(async (req) => {
     const results = []
 
     for (const user of demoUsers) {
-      // Check if user already exists
-      const { data: existingUser } = await supabaseAdmin.auth.admin.getUserByEmail(user.email)
-      
-      if (existingUser.user) {
-        results.push({ email: user.email, status: 'already_exists', id: existingUser.user.id })
-        continue
-      }
-
-      // Create the user
+      // Try to create the user directly - if it already exists, we'll get an error
       const { data: newUser, error: createError } = await supabaseAdmin.auth.admin.createUser({
         email: user.email,
         password: user.password,
@@ -48,8 +40,13 @@ serve(async (req) => {
       })
 
       if (createError) {
-        results.push({ email: user.email, status: 'error', error: createError.message })
-        continue
+        if (createError.message.includes('already registered')) {
+          results.push({ email: user.email, status: 'already_exists' })
+          continue
+        } else {
+          results.push({ email: user.email, status: 'error', error: createError.message })
+          continue
+        }
       }
 
       if (!newUser.user) {

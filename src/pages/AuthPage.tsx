@@ -115,17 +115,18 @@ export function AuthPage() {
   const createDemoUsers = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('https://erpeahzfckyuxxbywgmc.supabase.co/functions/v1/create-demo-users', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVycGVhaHpmY2t5dXh4Ynl3Z21jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEzODIwMTUsImV4cCI6MjA2Njk1ODAxNX0.cELgbitmfYSht0S8Bk7yq3QEnvQtzO1uccTfZ1LSbrw`,
-          'Content-Type': 'application/json',
-        },
-      });
+      const { data, error } = await supabase.functions.invoke('create-demo-users');
 
-      const result = await response.json();
+      if (error) {
+        toast({
+          variant: 'destructive',
+          title: 'Erreur de création',
+          description: error.message || 'Impossible de créer les comptes de démonstration.',
+        });
+        return;
+      }
 
-      if (result.success) {
+      if (data?.success) {
         toast({
           title: 'Comptes créés avec succès',
           description: 'Les comptes de démonstration ont été créés. Vous pouvez maintenant vous connecter.',
@@ -134,7 +135,7 @@ export function AuthPage() {
         toast({
           variant: 'destructive',
           title: 'Erreur de création',
-          description: result.error || 'Impossible de créer les comptes de démonstration.',
+          description: data?.error || 'Impossible de créer les comptes de démonstration.',
         });
       }
     } catch (error) {
