@@ -55,10 +55,10 @@ const Index = () => {
   // Show dashboard selection for admin users or fallback
   return (
     <div className="min-h-screen">
-      <div className="absolute top-4 right-4 z-10">
-        <ThemeToggle />
-      </div>
       <div className="container mx-auto p-6 space-y-8">
+        <div className="flex justify-end mb-6">
+          <ThemeToggle />
+        </div>
         <div className="text-center space-y-4">
           <h1 className="text-5xl font-bold gradient-neural bg-clip-text text-transparent animate-float">
             Sélection du Tableau de Bord

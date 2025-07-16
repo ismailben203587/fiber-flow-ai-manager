@@ -6,7 +6,6 @@ import ComplaintForm from "@/components/ComplaintForm";
 import ClientSearch from "@/components/ClientSearch";
 import OrdersList from "@/components/OrdersList";
 import DashboardNavigation from "@/components/DashboardNavigation";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { Building2, Users, ShoppingCart, Plus, Search, List } from "lucide-react";
 import { useState } from "react";
 
@@ -23,9 +22,6 @@ const CommercialDashboard = ({ onGoHome }: CommercialDashboardProps) => {
 
   return (
     <div className="min-h-screen">
-      <div className="absolute top-4 right-4 z-10">
-        <ThemeToggle />
-      </div>
       <div className="container mx-auto p-6">
         <DashboardNavigation onGoHome={onGoHome} />
         

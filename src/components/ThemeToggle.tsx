@@ -1,5 +1,5 @@
 import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 import { Moon, Sun } from 'lucide-react';
 import { useTheme } from '@/hooks/useTheme';
 
@@ -7,20 +7,23 @@ export const ThemeToggle = () => {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <div className="flex items-center space-x-3 p-2">
-      <Sun className="h-4 w-4 text-muted-foreground" />
-      <div className="flex items-center space-x-2">
-        <Switch
-          id="theme-toggle"
-          checked={theme === 'dark'}
-          onCheckedChange={toggleTheme}
-          className="data-[state=checked]:bg-primary"
-        />
-        <Label htmlFor="theme-toggle" className="sr-only">
-          Toggle theme
-        </Label>
-      </div>
-      <Moon className="h-4 w-4 text-muted-foreground" />
-    </div>
+    <Button
+      variant="outline"
+      size="sm"
+      onClick={toggleTheme}
+      className="flex items-center gap-2 glass-card border-border/50 hover:bg-accent/50"
+    >
+      {theme === 'dark' ? (
+        <>
+          <Moon className="h-4 w-4" />
+          <span className="hidden sm:inline">Sombre</span>
+        </>
+      ) : (
+        <>
+          <Sun className="h-4 w-4" />
+          <span className="hidden sm:inline">Clair</span>
+        </>
+      )}
+    </Button>
   );
 };

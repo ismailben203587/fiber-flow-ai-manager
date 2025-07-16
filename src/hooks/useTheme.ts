@@ -34,6 +34,9 @@ export const useThemeProvider = () => {
     root.classList.remove('light', 'dark');
     root.classList.add(theme);
     
+    // Also set attribute for better compatibility
+    root.setAttribute('data-theme', theme);
+    
     // Save theme to localStorage
     localStorage.setItem('theme', theme);
   }, [theme]);
