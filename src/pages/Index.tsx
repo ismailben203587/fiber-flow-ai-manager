@@ -34,20 +34,20 @@ const Index = () => {
     return <AuthPage />;
   }
 
-  // Route based on current dashboard selection
-  if (currentDashboard === 'commercial') {
+  // Route based on user role or current dashboard selection
+  if (currentDashboard === 'commercial' || (currentDashboard === 'home' && getPrimaryRole() === 'commercial')) {
     return <CommercialDashboard onGoHome={handleGoHome} />;
   }
 
-  if (currentDashboard === 'technical') {
+  if (currentDashboard === 'technical' || (currentDashboard === 'home' && getPrimaryRole() === 'tech')) {
     return <TechnicalDashboard onGoHome={handleGoHome} />;
   }
 
-  if (currentDashboard === 'technicien') {
+  if (currentDashboard === 'technicien' || (currentDashboard === 'home' && getPrimaryRole() === 'technicien')) {
     return <TechnicienDashboard onGoHome={handleGoHome} />;
   }
 
-  if (currentDashboard === 'admin') {
+  if (currentDashboard === 'admin' || (currentDashboard === 'home' && getPrimaryRole() === 'admin')) {
     return <AdminDashboard onGoHome={handleGoHome} />;
   }
 
