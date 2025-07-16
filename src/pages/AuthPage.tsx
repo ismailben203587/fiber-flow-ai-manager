@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { Wifi, Shield, Users } from 'lucide-react';
@@ -12,8 +11,7 @@ import { supabase } from '@/integrations/supabase/client';
 export function AuthPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [loginForm, setLoginForm] = useState({ email: '', password: '' });
-  const [signupForm, setSignupForm] = useState({ email: '', password: '', fullName: '' });
-  const { signIn, signUp } = useAuth();
+  const { signIn } = useAuth();
   const { toast } = useToast();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -46,36 +44,6 @@ export function AuthPage() {
     }
   };
 
-  const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    try {
-      const { error } = await signUp(signupForm.email, signupForm.password, signupForm.fullName);
-      
-      if (error) {
-        toast({
-          variant: 'destructive',
-          title: 'Erreur d\'inscription',
-          description: error.message,
-        });
-      } else {
-        toast({
-          title: 'Inscription réussie',
-          description: 'Vérifiez votre email pour confirmer votre compte.',
-        });
-        setSignupForm({ email: '', password: '', fullName: '' });
-      }
-    } catch (error) {
-      toast({
-        variant: 'destructive',
-        title: 'Erreur',
-        description: 'Une erreur inattendue s\'est produite.',
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const demoAccounts = [
     { name: 'Neural Admin', email: 'admin@ftth.ma', role: 'admin', color: 'from-neural-pink to-neural-purple' },
@@ -172,24 +140,7 @@ export function AuthPage() {
 
         <Card className="border border-neural-blue/20 bg-neural-dark/50 backdrop-blur-xl shadow-2xl shadow-neural-blue/10">
           <CardContent className="p-6">
-            <Tabs defaultValue="login" className="space-y-6">
-              <TabsList className="grid w-full grid-cols-2 bg-neural-darker/50 border border-neural-blue/20">
-                <TabsTrigger 
-                  value="login" 
-                  className="text-neural-blue/70 data-[state=active]:bg-neural-blue/20 data-[state=active]:text-neural-blue data-[state=active]:border-neural-blue/30"
-                >
-                  Connexion
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="signup"
-                  className="text-neural-blue/70 data-[state=active]:bg-neural-blue/20 data-[state=active]:text-neural-blue data-[state=active]:border-neural-blue/30"
-                >
-                  Inscription
-                </TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="login">
-                <form onSubmit={handleLogin} className="space-y-4">
+            <form onSubmit={handleLogin} className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="login-email" className="text-neural-blue/90 text-sm font-medium">
                       Email
@@ -227,65 +178,8 @@ export function AuthPage() {
                     {isLoading ? 'Connexion...' : 'Se connecter'}
                   </Button>
                 </form>
-              </TabsContent>
-              
-              <TabsContent value="signup">
-                <form onSubmit={handleSignup} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-name" className="text-neural-blue/90 text-sm font-medium">
-                      Nom complet
-                    </Label>
-                    <Input
-                      id="signup-name"
-                      type="text"
-                      placeholder="Jean Dupont"
-                      value={signupForm.fullName}
-                      onChange={(e) => setSignupForm({ ...signupForm, fullName: e.target.value })}
-                      required
-                      className="bg-neural-darker/60 border-neural-blue/30 text-neural-blue placeholder-neural-blue/50 focus:border-neural-cyan focus:ring-neural-cyan/20"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-email" className="text-neural-blue/90 text-sm font-medium">
-                      Email
-                    </Label>
-                    <Input
-                      id="signup-email"
-                      type="email"
-                      placeholder="votre@email.com"
-                      value={signupForm.email}
-                      onChange={(e) => setSignupForm({ ...signupForm, email: e.target.value })}
-                      required
-                      className="bg-neural-darker/60 border-neural-blue/30 text-neural-blue placeholder-neural-blue/50 focus:border-neural-cyan focus:ring-neural-cyan/20"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-password" className="text-neural-blue/90 text-sm font-medium">
-                      Mot de passe
-                    </Label>
-                    <Input
-                      id="signup-password"
-                      type="password"
-                      placeholder="••••••••"
-                      value={signupForm.password}
-                      onChange={(e) => setSignupForm({ ...signupForm, password: e.target.value })}
-                      required
-                      className="bg-neural-darker/60 border-neural-blue/30 text-neural-blue placeholder-neural-blue/50 focus:border-neural-cyan focus:ring-neural-cyan/20"
-                    />
-                  </div>
-                  <Button 
-                    type="submit" 
-                    className="w-full bg-gradient-to-r from-neural-blue to-neural-cyan hover:from-neural-cyan hover:to-neural-blue text-white font-medium py-3 transition-all duration-300 shadow-lg shadow-neural-blue/25" 
-                    disabled={isLoading}
-                  >
-                    <Shield className="w-4 h-4 mr-2" />
-                    {isLoading ? 'Inscription...' : 'S\'inscrire'}
-                  </Button>
-                </form>
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
 
         {/* Demo Accounts Section */}
         <div className="mt-8 text-center">

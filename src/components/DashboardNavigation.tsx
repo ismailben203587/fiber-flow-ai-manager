@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { Home, LogOut, User } from "lucide-react";
+import { LogOut, User } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -30,16 +30,7 @@ const DashboardNavigation = ({ onGoHome }: DashboardNavigationProps) => {
   };
 
   return (
-    <div className="flex justify-between items-center">
-      <Button
-        variant="outline"
-        onClick={onGoHome}
-        className="flex items-center gap-2"
-      >
-        <Home className="w-4 h-4" />
-        Retour à l'accueil
-      </Button>
-      
+    <div className="flex justify-end items-center">
       <div className="flex items-center gap-4">
         <ThemeToggle />
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
