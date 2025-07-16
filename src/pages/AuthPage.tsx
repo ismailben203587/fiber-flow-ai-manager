@@ -6,7 +6,8 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
-import { Wifi, Shield } from 'lucide-react';
+import { Wifi, Shield, Users } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 
 export function AuthPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -105,6 +106,42 @@ export function AuthPage() {
         variant: 'destructive',
         title: 'Erreur',
         description: 'Une erreur inattendue s\'est produite.',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const createDemoUsers = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('https://erpeahzfckyuxxbywgmc.supabase.co/functions/v1/create-demo-users', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVycGVhaHpmY2t5dXh4Ynl3Z21jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEzODIwMTUsImV4cCI6MjA2Njk1ODAxNX0.cELgbitmfYSht0S8Bk7yq3QEnvQtzO1uccTfZ1LSbrw`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        toast({
+          title: 'Comptes créés avec succès',
+          description: 'Les comptes de démonstration ont été créés. Vous pouvez maintenant vous connecter.',
+        });
+      } else {
+        toast({
+          variant: 'destructive',
+          title: 'Erreur de création',
+          description: result.error || 'Impossible de créer les comptes de démonstration.',
+        });
+      }
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Erreur',
+        description: 'Une erreur inattendue s\'est produite lors de la création des comptes.',
       });
     } finally {
       setIsLoading(false);
@@ -268,6 +305,20 @@ export function AuthPage() {
               </Button>
             ))}
           </div>
+          
+          {/* Create Demo Users Button */}
+          <div className="mt-4">
+            <Button
+              onClick={createDemoUsers}
+              disabled={isLoading}
+              variant="outline"
+              className="w-full bg-gradient-to-r from-neural-green to-neural-cyan border-neural-green/30 text-white font-medium text-sm py-2 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50"
+            >
+              <Users className="w-4 h-4 mr-2" />
+              Créer les comptes de démonstration
+            </Button>
+          </div>
+          
           <p className="text-neural-blue/40 text-xs mt-3">
             Code quantique : password123
           </p>
