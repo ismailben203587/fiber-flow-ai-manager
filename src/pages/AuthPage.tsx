@@ -76,6 +76,41 @@ export function AuthPage() {
     }
   };
 
+  const demoAccounts = [
+    { name: 'Neural Admin', email: 'admin@ftth.ma', role: 'admin', color: 'from-neural-pink to-neural-purple' },
+    { name: 'Commerce AI', email: 'commercial@ftth.ma', role: 'commercial', color: 'from-neural-cyan to-neural-blue' },
+    { name: 'Tech Matrix', email: 'tech@ftth.ma', role: 'tech', color: 'from-neural-green to-neural-cyan' },
+    { name: 'Cyber Supervisor', email: 'supervisor@ftth.ma', role: 'technicien', color: 'from-neural-purple to-neural-pink' }
+  ];
+
+  const handleDemoLogin = async (email: string) => {
+    setIsLoading(true);
+    try {
+      const { error } = await signIn(email, 'password123');
+      
+      if (error) {
+        toast({
+          variant: 'destructive',
+          title: 'Erreur de connexion démo',
+          description: 'Compte de démonstration non trouvé. Veuillez créer le compte d\'abord.',
+        });
+      } else {
+        toast({
+          title: 'Connexion démo réussie',
+          description: 'Vous êtes connecté avec un compte de démonstration.',
+        });
+      }
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Erreur',
+        description: 'Une erreur inattendue s\'est produite.',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-neural-darker via-neural-dark to-neural-dark flex items-center justify-center p-6 relative overflow-hidden">
       {/* Background effects */}
@@ -213,6 +248,30 @@ export function AuthPage() {
             </Tabs>
           </CardContent>
         </Card>
+
+        {/* Demo Accounts Section */}
+        <div className="mt-8 text-center">
+          <p className="text-neural-blue/60 text-sm mb-4 border-t border-neural-blue/10 pt-4">
+            Comptes de démonstration quantique :
+          </p>
+          <div className="grid grid-cols-2 gap-3">
+            {demoAccounts.map((account) => (
+              <Button
+                key={account.email}
+                onClick={() => handleDemoLogin(account.email)}
+                disabled={isLoading}
+                variant="outline"
+                className={`bg-gradient-to-r ${account.color} border-0 text-white font-medium text-xs p-3 h-auto flex flex-col items-center space-y-1 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50`}
+              >
+                <span className="font-semibold">{account.name}</span>
+                <span className="text-xs opacity-80">{account.email}</span>
+              </Button>
+            ))}
+          </div>
+          <p className="text-neural-blue/40 text-xs mt-3">
+            Code quantique : password123
+          </p>
+        </div>
       </div>
     </div>
   );
