@@ -19,12 +19,12 @@ interface TechnicienDashboardProps {
 
 const TechnicienDashboard = ({ onGoHome }: TechnicienDashboardProps) => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/20 via-primary/10 to-secondary/20">
+    <div className="min-h-screen">
       <div className="container mx-auto p-6 space-y-8">
         <DashboardNavigation onGoHome={onGoHome} />
         
         <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold gradient-warning bg-clip-text text-transparent animate-float">
             Tableau de Bord Technicien
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -34,7 +34,7 @@ const TechnicienDashboard = ({ onGoHome }: TechnicienDashboardProps) => {
 
         {/* Statistiques rapides */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <Card className="border-0 shadow-lg bg-card/50 backdrop-blur-sm">
+          <Card className="glass-card animate-glow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Tickets en cours</CardTitle>
               <Clock className="h-4 w-4 text-muted-foreground" />
@@ -47,33 +47,33 @@ const TechnicienDashboard = ({ onGoHome }: TechnicienDashboardProps) => {
             </CardContent>
           </Card>
 
-          <Card className="border-0 shadow-lg bg-card/50 backdrop-blur-sm">
+          <Card className="glass-card animate-glow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Urgences</CardTitle>
-              <AlertTriangle className="h-4 w-4 text-red-500" />
+              <AlertTriangle className="h-4 w-4 text-destructive" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-red-500">1</div>
+              <div className="text-2xl font-bold text-destructive">1</div>
               <p className="text-xs text-muted-foreground">
                 Intervention critique
               </p>
             </CardContent>
           </Card>
 
-          <Card className="border-0 shadow-lg bg-card/50 backdrop-blur-sm">
+          <Card className="glass-card animate-glow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Terminés aujourd'hui</CardTitle>
-              <CheckCircle className="h-4 w-4 text-green-500" />
+              <CheckCircle className="h-4 w-4 text-accent" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-green-500">2</div>
+              <div className="text-2xl font-bold text-accent">2</div>
               <p className="text-xs text-muted-foreground">
                 Bonne progression
               </p>
             </CardContent>
           </Card>
 
-          <Card className="border-0 shadow-lg bg-card/50 backdrop-blur-sm">
+          <Card className="glass-card animate-glow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Prochaine intervention</CardTitle>
               <Calendar className="h-4 w-4 text-muted-foreground" />
@@ -88,7 +88,7 @@ const TechnicienDashboard = ({ onGoHome }: TechnicienDashboardProps) => {
         </div>
 
         {/* Tickets assignés */}
-        <Card className="border-0 shadow-lg bg-card/50 backdrop-blur-sm">
+        <Card className="glass-card">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Wrench className="w-5 h-5" />
@@ -98,7 +98,7 @@ const TechnicienDashboard = ({ onGoHome }: TechnicienDashboardProps) => {
           <CardContent>
             <div className="space-y-4">
               {/* Ticket urgent */}
-              <div className="flex items-center justify-between p-4 border rounded-lg bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-800">
+              <div className="flex items-center justify-between p-4 border rounded-lg glass-card border-destructive/30">
                 <div className="flex items-center space-x-4">
                   <div className="flex flex-col">
                     <div className="flex items-center gap-2">
@@ -136,7 +136,7 @@ const TechnicienDashboard = ({ onGoHome }: TechnicienDashboardProps) => {
               </div>
 
               {/* Ticket normal */}
-              <div className="flex items-center justify-between p-4 border rounded-lg">
+              <div className="flex items-center justify-between p-4 border rounded-lg glass-card">
                 <div className="flex items-center space-x-4">
                   <div className="flex flex-col">
                     <div className="flex items-center gap-2">
@@ -174,7 +174,7 @@ const TechnicienDashboard = ({ onGoHome }: TechnicienDashboardProps) => {
               </div>
 
               {/* Ticket normal */}
-              <div className="flex items-center justify-between p-4 border rounded-lg">
+              <div className="flex items-center justify-between p-4 border rounded-lg glass-card">
                 <div className="flex items-center space-x-4">
                   <div className="flex flex-col">
                     <div className="flex items-center gap-2">

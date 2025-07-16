@@ -21,15 +21,15 @@ const CommercialDashboard = ({ onGoHome }: CommercialDashboardProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-cyan-50">
+    <div className="min-h-screen">
       <div className="container mx-auto p-6">
         <DashboardNavigation onGoHome={onGoHome} />
         
         <div className="mb-8">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent mb-2">
+          <h1 className="text-4xl font-bold gradient-secondary bg-clip-text text-transparent mb-2 animate-float">
             Smart Telecom - Commercial
           </h1>
-          <p className="text-gray-600">
+          <p className="text-muted-foreground">
             Plateforme de gestion commerciale et création de tickets
           </p>
         </div>
@@ -37,24 +37,24 @@ const CommercialDashboard = ({ onGoHome }: CommercialDashboardProps) => {
         <CommercialStats onNavigateToOrders={handleNavigateToOrders} />
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5 bg-emerald-50">
-            <TabsTrigger value="commands" className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white">
+          <TabsList className="grid w-full grid-cols-5 glass-card">
+            <TabsTrigger value="commands" className="data-[state=active]:gradient-secondary data-[state=active]:text-white">
               <ShoppingCart className="h-4 w-4 mr-2" />
               Nouvelle Commande
             </TabsTrigger>
-            <TabsTrigger value="orders" className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white">
+            <TabsTrigger value="orders" className="data-[state=active]:gradient-secondary data-[state=active]:text-white">
               <List className="h-4 w-4 mr-2" />
               Mes Commandes
             </TabsTrigger>
-            <TabsTrigger value="tickets" className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white">
+            <TabsTrigger value="tickets" className="data-[state=active]:gradient-secondary data-[state=active]:text-white">
               <Plus className="h-4 w-4 mr-2" />
               Nouveau Ticket
             </TabsTrigger>
-            <TabsTrigger value="search" className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white">
+            <TabsTrigger value="search" className="data-[state=active]:gradient-secondary data-[state=active]:text-white">
               <Search className="h-4 w-4 mr-2" />
               Recherche Client
             </TabsTrigger>
-            <TabsTrigger value="clients" className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white">
+            <TabsTrigger value="clients" className="data-[state=active]:gradient-secondary data-[state=active]:text-white">
               <Users className="h-4 w-4 mr-2" />
               Clients
             </TabsTrigger>

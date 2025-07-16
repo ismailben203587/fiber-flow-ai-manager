@@ -9,90 +9,98 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 220 15% 98%;
-    --foreground: 222.2 84% 4.9%;
+    /* Modern dark theme inspired by the uploaded image */
+    --background: 230 25% 8%;
+    --foreground: 210 40% 98%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 230 25% 12%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 230 25% 12%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 214 100% 50%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 270 60% 65%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 200 100% 60%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 230 25% 16%;
+    --muted-foreground: 215 20.2% 65.1%;
 
-    --accent: 32 100% 55%;
+    --accent: 180 100% 65%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 214 100% 50%;
+    --border: 230 25% 20%;
+    --input: 230 25% 16%;
+    --ring: 270 60% 65%;
 
-    --radius: 0.75rem;
+    --radius: 1rem;
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 230 25% 10%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 270 60% 65%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 230 25% 16%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 230 25% 20%;
+    --sidebar-ring: 270 60% 65%;
 
-    /* Custom telecom colors */
+    /* Enhanced color palette */
     --telecom-blue: 214 100% 50%;
     --telecom-orange: 32 100% 55%;
-    --success-green: 142 76% 36%;
+    --success-green: 142 76% 45%;
     --warning-yellow: 48 96% 53%;
     --danger-red: 0 84% 60%;
     
-    /* Neural theme colors */
-    --neural-dark: 210 100% 8%;
-    --neural-darker: 210 100% 4%;
-    --neural-blue: 195 100% 65%;
+    /* Neural theme colors matching the uploaded image */
+    --neural-dark: 230 25% 8%;
+    --neural-darker: 230 25% 4%;
+    --neural-blue: 200 100% 60%;
     --neural-green: 142 76% 45%;
     --neural-purple: 270 60% 65%;
     --neural-pink: 330 60% 65%;
     --neural-cyan: 180 100% 65%;
+    --neural-teal: 170 76% 45%;
+    
+    /* Gradient definitions */
+    --gradient-primary: linear-gradient(135deg, hsl(270 60% 65%) 0%, hsl(200 100% 60%) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(180 100% 65%) 0%, hsl(170 76% 45%) 100%);
+    --gradient-card: linear-gradient(135deg, hsl(230 25% 12% / 0.8) 0%, hsl(230 25% 16% / 0.8) 100%);
+    --gradient-background: linear-gradient(135deg, hsl(230 25% 8%) 0%, hsl(270 60% 12%) 50%, hsl(200 100% 8%) 100%);
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    --background: 230 25% 8%;
     --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
+    --card: 230 25% 12%;
     --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
+    --popover: 230 25% 12%;
     --popover-foreground: 210 40% 98%;
-    --primary: 214 100% 50%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
+    --primary: 270 60% 65%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 200 100% 60%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 230 25% 16%;
     --muted-foreground: 215 20.2% 65.1%;
-    --accent: 32 100% 55%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 180 100% 65%;
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    --border: 230 25% 20%;
+    --input: 230 25% 16%;
+    --ring: 270 60% 65%;
+    --sidebar-background: 230 25% 10%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 270 60% 65%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 230 25% 16%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 230 25% 20%;
+    --sidebar-ring: 270 60% 65%;
   }
 }
 
@@ -102,7 +110,29 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply text-foreground font-sans;
+    background: var(--gradient-background);
+    min-height: 100vh;
+  }
+  
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+  
+  .gradient-secondary {
+    background: var(--gradient-secondary);
+  }
+  
+  .gradient-card {
+    background: var(--gradient-card);
+    backdrop-filter: blur(20px);
+    border: 1px solid hsl(var(--border));
+  }
+  
+  .glass-card {
+    background: hsl(var(--card) / 0.8);
+    backdrop-filter: blur(20px);
+    border: 1px solid hsl(var(--border) / 0.3);
   }
   
   .gradient-telecom {
@@ -110,7 +140,7 @@ All colors MUST be HSL.
   }
   
   .gradient-success {
-    background: linear-gradient(135deg, hsl(var(--success-green)) 0%, hsl(var(--telecom-blue)) 100%);
+    background: linear-gradient(135deg, hsl(var(--success-green)) 0%, hsl(var(--neural-cyan)) 100%);
   }
   
   .gradient-warning {
@@ -118,7 +148,11 @@ All colors MUST be HSL.
   }
   
   .gradient-danger {
-    background: linear-gradient(135deg, hsl(var(--danger-red)) 0%, hsl(var(--telecom-orange)) 100%);
+    background: linear-gradient(135deg, hsl(var(--danger-red)) 0%, hsl(var(--neural-pink)) 100%);
+  }
+  
+  .gradient-neural {
+    background: linear-gradient(135deg, hsl(var(--neural-purple)) 0%, hsl(var(--neural-blue)) 50%, hsl(var(--neural-cyan)) 100%);
   }
 }
 
@@ -129,5 +163,31 @@ All colors MUST be HSL.
   
   .animate-bounce-slow {
     animation: bounce 2s infinite;
+  }
+  
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+  
+  @keyframes glow {
+    from {
+      box-shadow: 0 0 20px hsl(var(--primary) / 0.3);
+    }
+    to {
+      box-shadow: 0 0 30px hsl(var(--primary) / 0.6);
+    }
   }
 }

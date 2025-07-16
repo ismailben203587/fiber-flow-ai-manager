@@ -20,9 +20,9 @@ const Index = () => {
   // Show loading spinner while checking authentication
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-primary/20 via-primary/10 to-secondary/20 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto animate-glow"></div>
           <p className="mt-4 text-muted-foreground">Chargement...</p>
         </div>
       </div>
@@ -53,10 +53,10 @@ const Index = () => {
 
   // Show dashboard selection for admin users or fallback
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/20 via-primary/10 to-secondary/20">
+    <div className="min-h-screen">
       <div className="container mx-auto p-6 space-y-8">
         <div className="text-center space-y-4">
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+          <h1 className="text-5xl font-bold gradient-neural bg-clip-text text-transparent animate-float">
             Sélection du Tableau de Bord
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
@@ -71,11 +71,11 @@ const Index = () => {
           {/* Commercial Dashboard Card */}
           {(hasRole('admin') || hasRole('commercial')) && (
             <Card 
-              className="border-0 shadow-2xl bg-card/50 backdrop-blur-sm hover:shadow-3xl transition-all duration-300 cursor-pointer group hover:scale-105"
+              className="glass-card hover:scale-105 transition-all duration-300 cursor-pointer group animate-glow"
               onClick={() => setCurrentDashboard('commercial')}
             >
               <CardHeader className="text-center space-y-4">
-                <div className="mx-auto p-4 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full w-fit group-hover:scale-110 transition-transform duration-300">
+                <div className="mx-auto p-4 gradient-secondary rounded-full w-fit group-hover:scale-110 transition-transform duration-300">
                   <BarChart3 className="w-8 h-8 text-white" />
                 </div>
                 <CardTitle className="text-2xl font-bold text-foreground">
@@ -86,7 +86,7 @@ const Index = () => {
                 <p className="text-muted-foreground text-center">
                   Gestion des commandes FTTH, support client et analyses commerciales
                 </p>
-                <Button className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300">
+                <Button className="w-full gradient-secondary text-white hover:opacity-80 transition-all duration-300">
                   Accéder au Dashboard
                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
                 </Button>
@@ -97,11 +97,11 @@ const Index = () => {
           {/* Technical Dashboard Card */}
           {(hasRole('admin') || hasRole('tech')) && (
             <Card 
-              className="border-0 shadow-2xl bg-card/50 backdrop-blur-sm hover:shadow-3xl transition-all duration-300 cursor-pointer group hover:scale-105"
+              className="glass-card hover:scale-105 transition-all duration-300 cursor-pointer group animate-glow"
               onClick={() => setCurrentDashboard('technical')}
             >
               <CardHeader className="text-center space-y-4">
-                <div className="mx-auto p-4 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full w-fit group-hover:scale-110 transition-transform duration-300">
+                <div className="mx-auto p-4 gradient-success rounded-full w-fit group-hover:scale-110 transition-transform duration-300">
                   <Settings className="w-8 h-8 text-white" />
                 </div>
                 <CardTitle className="text-2xl font-bold text-foreground">
@@ -112,7 +112,7 @@ const Index = () => {
                 <p className="text-muted-foreground text-center">
                   Gestion des équipements, interventions techniques et maintenance réseau
                 </p>
-                <Button className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300">
+                <Button className="w-full gradient-success text-white hover:opacity-80 transition-all duration-300">
                   Accéder au Dashboard
                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
                 </Button>
@@ -123,11 +123,11 @@ const Index = () => {
           {/* Technicien Dashboard Card */}
           {(hasRole('admin') || hasRole('technicien')) && (
             <Card 
-              className="border-0 shadow-2xl bg-card/50 backdrop-blur-sm hover:shadow-3xl transition-all duration-300 cursor-pointer group hover:scale-105"
+              className="glass-card hover:scale-105 transition-all duration-300 cursor-pointer group animate-glow"
               onClick={() => setCurrentDashboard('technicien')}
             >
               <CardHeader className="text-center space-y-4">
-                <div className="mx-auto p-4 bg-gradient-to-r from-orange-500 to-red-500 rounded-full w-fit group-hover:scale-110 transition-transform duration-300">
+                <div className="mx-auto p-4 gradient-warning rounded-full w-fit group-hover:scale-110 transition-transform duration-300">
                   <Users className="w-8 h-8 text-white" />
                 </div>
                 <CardTitle className="text-2xl font-bold text-foreground">
@@ -138,7 +138,7 @@ const Index = () => {
                 <p className="text-muted-foreground text-center">
                   Gestion des interventions et tickets assignés
                 </p>
-                <Button className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300">
+                <Button className="w-full gradient-warning text-white hover:opacity-80 transition-all duration-300">
                   Accéder au Dashboard
                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
                 </Button>
@@ -149,11 +149,11 @@ const Index = () => {
           {/* Admin Dashboard Card */}
           {hasRole('admin') && (
             <Card 
-              className="border-0 shadow-2xl bg-card/50 backdrop-blur-sm hover:shadow-3xl transition-all duration-300 cursor-pointer group hover:scale-105 md:col-span-2 lg:col-span-1"
+              className="glass-card hover:scale-105 transition-all duration-300 cursor-pointer group animate-glow md:col-span-2 lg:col-span-1"
               onClick={() => setCurrentDashboard('admin')}
             >
               <CardHeader className="text-center space-y-4">
-                <div className="mx-auto p-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full w-fit group-hover:scale-110 transition-transform duration-300">
+                <div className="mx-auto p-4 gradient-primary rounded-full w-fit group-hover:scale-110 transition-transform duration-300">
                   <ShieldCheck className="w-8 h-8 text-white" />
                 </div>
                 <CardTitle className="text-2xl font-bold text-foreground">
@@ -164,7 +164,7 @@ const Index = () => {
                 <p className="text-muted-foreground text-center">
                   Administration système et accès à tous les dashboards
                 </p>
-                <Button className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300">
+                <Button className="w-full gradient-primary text-white hover:opacity-80 transition-all duration-300">
                   Accéder au Dashboard
                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
                 </Button>
