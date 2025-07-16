@@ -54,6 +54,15 @@ All colors MUST be HSL.
     --success-green: 142 76% 36%;
     --warning-yellow: 48 96% 53%;
     --danger-red: 0 84% 60%;
+    
+    /* Neural theme colors */
+    --neural-dark: 210 100% 8%;
+    --neural-darker: 210 100% 4%;
+    --neural-blue: 195 100% 65%;
+    --neural-green: 142 76% 45%;
+    --neural-purple: 270 60% 65%;
+    --neural-pink: 330 60% 65%;
+    --neural-cyan: 180 100% 65%;
   }
 
   .dark {

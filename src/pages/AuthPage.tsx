@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
+import { Wifi, Shield } from 'lucide-react';
 
 export function AuthPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -76,28 +77,50 @@ export function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/20 via-primary/10 to-secondary/20 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <Card className="border-0 shadow-2xl bg-card/95 backdrop-blur-sm">
-          <CardHeader className="text-center space-y-4">
-            <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              Tableau de Bord
-            </CardTitle>
-            <p className="text-muted-foreground">
-              Connectez-vous pour accéder à votre espace de travail
-            </p>
-          </CardHeader>
-          <CardContent>
-            <Tabs defaultValue="login" className="space-y-4">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="login">Connexion</TabsTrigger>
-                <TabsTrigger value="signup">Inscription</TabsTrigger>
+    <div className="min-h-screen bg-gradient-to-br from-neural-darker via-neural-dark to-neural-dark flex items-center justify-center p-6 relative overflow-hidden">
+      {/* Background effects */}
+      <div className="absolute inset-0 bg-gradient-to-r from-neural-blue/5 via-transparent to-neural-cyan/5" />
+      <div className="absolute top-10 left-10 w-32 h-32 bg-neural-blue/10 rounded-full blur-3xl" />
+      <div className="absolute bottom-10 right-10 w-40 h-40 bg-neural-cyan/10 rounded-full blur-3xl" />
+      
+      <div className="w-full max-w-md relative z-10">
+        {/* Header with icon */}
+        <div className="text-center mb-8">
+          <div className="w-16 h-16 bg-neural-blue rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-neural-blue/25">
+            <Wifi className="w-8 h-8 text-white" />
+          </div>
+          <h1 className="text-2xl font-bold text-neural-blue mb-2">
+            Tableau de Bord
+          </h1>
+          <p className="text-neural-blue/70 text-sm">
+            Connectez-vous pour accéder à votre espace de travail
+          </p>
+        </div>
+
+        <Card className="border border-neural-blue/20 bg-neural-dark/50 backdrop-blur-xl shadow-2xl shadow-neural-blue/10">
+          <CardContent className="p-6">
+            <Tabs defaultValue="login" className="space-y-6">
+              <TabsList className="grid w-full grid-cols-2 bg-neural-darker/50 border border-neural-blue/20">
+                <TabsTrigger 
+                  value="login" 
+                  className="text-neural-blue/70 data-[state=active]:bg-neural-blue/20 data-[state=active]:text-neural-blue data-[state=active]:border-neural-blue/30"
+                >
+                  Connexion
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="signup"
+                  className="text-neural-blue/70 data-[state=active]:bg-neural-blue/20 data-[state=active]:text-neural-blue data-[state=active]:border-neural-blue/30"
+                >
+                  Inscription
+                </TabsTrigger>
               </TabsList>
               
               <TabsContent value="login">
                 <form onSubmit={handleLogin} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="login-email">Email</Label>
+                    <Label htmlFor="login-email" className="text-neural-blue/90 text-sm font-medium">
+                      Email
+                    </Label>
                     <Input
                       id="login-email"
                       type="email"
@@ -105,10 +128,13 @@ export function AuthPage() {
                       value={loginForm.email}
                       onChange={(e) => setLoginForm({ ...loginForm, email: e.target.value })}
                       required
+                      className="bg-neural-darker/60 border-neural-blue/30 text-neural-blue placeholder-neural-blue/50 focus:border-neural-cyan focus:ring-neural-cyan/20"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="login-password">Mot de passe</Label>
+                    <Label htmlFor="login-password" className="text-neural-blue/90 text-sm font-medium">
+                      Mot de passe
+                    </Label>
                     <Input
                       id="login-password"
                       type="password"
@@ -116,9 +142,15 @@ export function AuthPage() {
                       value={loginForm.password}
                       onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
                       required
+                      className="bg-neural-darker/60 border-neural-blue/30 text-neural-blue placeholder-neural-blue/50 focus:border-neural-cyan focus:ring-neural-cyan/20"
                     />
                   </div>
-                  <Button type="submit" className="w-full" disabled={isLoading}>
+                  <Button 
+                    type="submit" 
+                    className="w-full bg-gradient-to-r from-neural-blue to-neural-cyan hover:from-neural-cyan hover:to-neural-blue text-white font-medium py-3 transition-all duration-300 shadow-lg shadow-neural-blue/25" 
+                    disabled={isLoading}
+                  >
+                    <Shield className="w-4 h-4 mr-2" />
                     {isLoading ? 'Connexion...' : 'Se connecter'}
                   </Button>
                 </form>
@@ -127,7 +159,9 @@ export function AuthPage() {
               <TabsContent value="signup">
                 <form onSubmit={handleSignup} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="signup-name">Nom complet</Label>
+                    <Label htmlFor="signup-name" className="text-neural-blue/90 text-sm font-medium">
+                      Nom complet
+                    </Label>
                     <Input
                       id="signup-name"
                       type="text"
@@ -135,10 +169,13 @@ export function AuthPage() {
                       value={signupForm.fullName}
                       onChange={(e) => setSignupForm({ ...signupForm, fullName: e.target.value })}
                       required
+                      className="bg-neural-darker/60 border-neural-blue/30 text-neural-blue placeholder-neural-blue/50 focus:border-neural-cyan focus:ring-neural-cyan/20"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="signup-email">Email</Label>
+                    <Label htmlFor="signup-email" className="text-neural-blue/90 text-sm font-medium">
+                      Email
+                    </Label>
                     <Input
                       id="signup-email"
                       type="email"
@@ -146,10 +183,13 @@ export function AuthPage() {
                       value={signupForm.email}
                       onChange={(e) => setSignupForm({ ...signupForm, email: e.target.value })}
                       required
+                      className="bg-neural-darker/60 border-neural-blue/30 text-neural-blue placeholder-neural-blue/50 focus:border-neural-cyan focus:ring-neural-cyan/20"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="signup-password">Mot de passe</Label>
+                    <Label htmlFor="signup-password" className="text-neural-blue/90 text-sm font-medium">
+                      Mot de passe
+                    </Label>
                     <Input
                       id="signup-password"
                       type="password"
@@ -157,9 +197,15 @@ export function AuthPage() {
                       value={signupForm.password}
                       onChange={(e) => setSignupForm({ ...signupForm, password: e.target.value })}
                       required
+                      className="bg-neural-darker/60 border-neural-blue/30 text-neural-blue placeholder-neural-blue/50 focus:border-neural-cyan focus:ring-neural-cyan/20"
                     />
                   </div>
-                  <Button type="submit" className="w-full" disabled={isLoading}>
+                  <Button 
+                    type="submit" 
+                    className="w-full bg-gradient-to-r from-neural-blue to-neural-cyan hover:from-neural-cyan hover:to-neural-blue text-white font-medium py-3 transition-all duration-300 shadow-lg shadow-neural-blue/25" 
+                    disabled={isLoading}
+                  >
+                    <Shield className="w-4 h-4 mr-2" />
                     {isLoading ? 'Inscription...' : 'S\'inscrire'}
                   </Button>
                 </form>
