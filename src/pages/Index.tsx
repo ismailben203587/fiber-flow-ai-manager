@@ -1,128 +1,181 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Building2, Wrench } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, BarChart3, Settings, Users, ShieldCheck } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { AuthPage } from "./AuthPage";
 import CommercialDashboard from "./CommercialDashboard";
 import TechnicalDashboard from "./TechnicalDashboard";
+import AdminDashboard from "./AdminDashboard";
+import TechnicienDashboard from "./TechnicienDashboard";
 
 const Index = () => {
-  const [currentDashboard, setCurrentDashboard] = useState<'home' | 'commercial' | 'technical'>('home');
+  const [currentDashboard, setCurrentDashboard] = useState<'home' | 'commercial' | 'technical' | 'admin' | 'technicien'>('home');
+  const { user, loading, getPrimaryRole, hasRole } = useAuth();
 
   const handleGoHome = () => {
     setCurrentDashboard('home');
   };
 
-  if (currentDashboard === 'commercial') {
+  // Show loading spinner while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-primary/20 via-primary/10 to-secondary/20 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-muted-foreground">Chargement...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show auth page if not logged in
+  if (!user) {
+    return <AuthPage />;
+  }
+
+  // Route based on user role or current dashboard selection
+  if (currentDashboard === 'commercial' || (currentDashboard === 'home' && getPrimaryRole() === 'commercial')) {
     return <CommercialDashboard onGoHome={handleGoHome} />;
   }
 
-  if (currentDashboard === 'technical') {
+  if (currentDashboard === 'technical' || (currentDashboard === 'home' && getPrimaryRole() === 'tech')) {
     return <TechnicalDashboard onGoHome={handleGoHome} />;
   }
 
+  if (currentDashboard === 'technicien' || (currentDashboard === 'home' && getPrimaryRole() === 'technicien')) {
+    return <TechnicienDashboard onGoHome={handleGoHome} />;
+  }
+
+  if (currentDashboard === 'admin' || (currentDashboard === 'home' && getPrimaryRole() === 'admin')) {
+    return <AdminDashboard onGoHome={handleGoHome} />;
+  }
+
+  // Show dashboard selection for admin users or fallback
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
-      <div className="container mx-auto p-6">
-        <div className="text-center mb-12">
-          <h1 className="text-6xl font-bold gradient-telecom bg-clip-text text-transparent mb-4">
-            Smart Telecom
+    <div className="min-h-screen bg-gradient-to-br from-primary/20 via-primary/10 to-secondary/20">
+      <div className="container mx-auto p-6 space-y-8">
+        <div className="text-center space-y-4">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            Sélection du Tableau de Bord
           </h1>
-          <p className="text-xl text-gray-300 mb-8">
-            Plateforme intelligente de gestion et supervision d'un réseau FTTH
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            {hasRole('admin') ? 
+              'En tant qu\'administrateur, vous avez accès à tous les tableaux de bord' :
+              'Choisissez votre espace de travail'
+            }
           </p>
-          
-          <div className="flex justify-center items-center gap-8">
-            <div className="h-px bg-gradient-to-r from-transparent via-blue-500 to-transparent flex-1 max-w-xs"></div>
-            <div className="text-blue-400 font-medium">Choisissez votre espace</div>
-            <div className="h-px bg-gradient-to-r from-transparent via-blue-500 to-transparent flex-1 max-w-xs"></div>
-          </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          {/* Dashboard Commercial */}
-          <Card 
-            className="bg-gradient-to-br from-emerald-500/10 to-cyan-500/10 border-emerald-500/20 hover:border-emerald-400/40 transition-all duration-300 cursor-pointer group"
-            onClick={() => setCurrentDashboard('commercial')}
-          >
-            <CardHeader className="text-center pb-6">
-              <div className="mx-auto w-16 h-16 bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                <Building2 className="h-8 w-8 text-white" />
-              </div>
-              <CardTitle className="text-2xl font-bold text-emerald-100">
-                Espace Commercial
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="text-center">
-              <p className="text-emerald-200 mb-6">
-                Gestion des commandes, évaluation IA de faisabilité, suivi des clients et rapports commerciaux
-              </p>
-              <div className="space-y-2 text-sm text-emerald-300">
-                <div className="flex items-center justify-between">
-                  <span>• Nouvelles commandes FTTH</span>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          {/* Commercial Dashboard Card */}
+          {(hasRole('admin') || hasRole('commercial')) && (
+            <Card 
+              className="border-0 shadow-2xl bg-card/50 backdrop-blur-sm hover:shadow-3xl transition-all duration-300 cursor-pointer group hover:scale-105"
+              onClick={() => setCurrentDashboard('commercial')}
+            >
+              <CardHeader className="text-center space-y-4">
+                <div className="mx-auto p-4 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full w-fit group-hover:scale-110 transition-transform duration-300">
+                  <BarChart3 className="w-8 h-8 text-white" />
                 </div>
-                <div className="flex items-center justify-between">
-                  <span>• Évaluation IA intégrée</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span>• Suivi commercial</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span>• Statistiques de vente</span>
-                </div>
-              </div>
-              <Button 
-                className="w-full mt-6 bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-700 hover:to-cyan-700 text-white group-hover:shadow-lg transition-all duration-300"
-                onClick={() => setCurrentDashboard('commercial')}
-              >
-                Accéder à l'espace commercial
-              </Button>
-            </CardContent>
-          </Card>
+                <CardTitle className="text-2xl font-bold text-foreground">
+                  Dashboard Commercial
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-muted-foreground text-center">
+                  Gestion des commandes FTTH, support client et analyses commerciales
+                </p>
+                <Button className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300">
+                  Accéder au Dashboard
+                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                </Button>
+              </CardContent>
+            </Card>
+          )}
 
-          {/* Dashboard Technique */}
-          <Card 
-            className="bg-gradient-to-br from-blue-500/10 to-slate-500/10 border-blue-500/20 hover:border-blue-400/40 transition-all duration-300 cursor-pointer group"
-            onClick={() => setCurrentDashboard('technical')}
-          >
-            <CardHeader className="text-center pb-6">
-              <div className="mx-auto w-16 h-16 bg-gradient-to-r from-blue-600 to-slate-600 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                <Wrench className="h-8 w-8 text-white" />
-              </div>
-              <CardTitle className="text-2xl font-bold text-blue-100">
-                Espace Technique
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="text-center">
-              <p className="text-blue-200 mb-6">
-                Supervision réseau, gestion des équipements, études techniques et maintenance FTTH
-              </p>
-              <div className="space-y-2 text-sm text-blue-300">
-                <div className="flex items-center justify-between">
-                  <span>• Études techniques approfondies</span>
+          {/* Technical Dashboard Card */}
+          {(hasRole('admin') || hasRole('tech')) && (
+            <Card 
+              className="border-0 shadow-2xl bg-card/50 backdrop-blur-sm hover:shadow-3xl transition-all duration-300 cursor-pointer group hover:scale-105"
+              onClick={() => setCurrentDashboard('technical')}
+            >
+              <CardHeader className="text-center space-y-4">
+                <div className="mx-auto p-4 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full w-fit group-hover:scale-110 transition-transform duration-300">
+                  <Settings className="w-8 h-8 text-white" />
                 </div>
-                <div className="flex items-center justify-between">
-                  <span>• Gestion PCO/MSAN</span>
+                <CardTitle className="text-2xl font-bold text-foreground">
+                  Dashboard Technique
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-muted-foreground text-center">
+                  Gestion des équipements, interventions techniques et maintenance réseau
+                </p>
+                <Button className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300">
+                  Accéder au Dashboard
+                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Technicien Dashboard Card */}
+          {(hasRole('admin') || hasRole('technicien')) && (
+            <Card 
+              className="border-0 shadow-2xl bg-card/50 backdrop-blur-sm hover:shadow-3xl transition-all duration-300 cursor-pointer group hover:scale-105"
+              onClick={() => setCurrentDashboard('technicien')}
+            >
+              <CardHeader className="text-center space-y-4">
+                <div className="mx-auto p-4 bg-gradient-to-r from-orange-500 to-red-500 rounded-full w-fit group-hover:scale-110 transition-transform duration-300">
+                  <Users className="w-8 h-8 text-white" />
                 </div>
-                <div className="flex items-center justify-between">
-                  <span>• Supervision réseau</span>
+                <CardTitle className="text-2xl font-bold text-foreground">
+                  Dashboard Technicien
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-muted-foreground text-center">
+                  Gestion des interventions et tickets assignés
+                </p>
+                <Button className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300">
+                  Accéder au Dashboard
+                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Admin Dashboard Card */}
+          {hasRole('admin') && (
+            <Card 
+              className="border-0 shadow-2xl bg-card/50 backdrop-blur-sm hover:shadow-3xl transition-all duration-300 cursor-pointer group hover:scale-105 md:col-span-2 lg:col-span-1"
+              onClick={() => setCurrentDashboard('admin')}
+            >
+              <CardHeader className="text-center space-y-4">
+                <div className="mx-auto p-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full w-fit group-hover:scale-110 transition-transform duration-300">
+                  <ShieldCheck className="w-8 h-8 text-white" />
                 </div>
-                <div className="flex items-center justify-between">
-                  <span>• Tickets d'intervention</span>
-                </div>
-              </div>
-              <Button 
-                className="w-full mt-6 bg-gradient-to-r from-blue-600 to-slate-600 hover:from-blue-700 hover:to-slate-700 text-white group-hover:shadow-lg transition-all duration-300"
-                onClick={() => setCurrentDashboard('technical')}
-              >
-                Accéder à l'espace technique
-              </Button>
-            </CardContent>
-          </Card>
+                <CardTitle className="text-2xl font-bold text-foreground">
+                  Dashboard Admin
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-muted-foreground text-center">
+                  Administration système et accès à tous les dashboards
+                </p>
+                <Button className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300">
+                  Accéder au Dashboard
+                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                </Button>
+              </CardContent>
+            </Card>
+          )}
         </div>
 
-        <div className="text-center mt-12">
-          <p className="text-gray-400 text-sm">
-            Plateforme développée pour optimiser la gestion des réseaux FTTH avec intelligence artificielle
+        <div className="text-center">
+          <p className="text-sm text-muted-foreground">
+            Votre accès est déterminé par votre rôle utilisateur
           </p>
         </div>
       </div>

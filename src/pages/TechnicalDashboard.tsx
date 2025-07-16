@@ -17,7 +17,7 @@ const TechnicalDashboard = ({ onGoHome }: TechnicalDashboardProps) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 via-slate-800 to-blue-800">
       <div className="container mx-auto p-6">
-        <DashboardNavigation onGoHome={onGoHome} title="Espace Technique" />
+        <DashboardNavigation onGoHome={onGoHome} />
         
         <div className="mb-8">
           <h1 className="text-4xl font-bold gradient-telecom bg-clip-text text-transparent mb-2">

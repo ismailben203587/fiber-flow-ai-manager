@@ -23,7 +23,7 @@ const CommercialDashboard = ({ onGoHome }: CommercialDashboardProps) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-cyan-50">
       <div className="container mx-auto p-6">
-        <DashboardNavigation onGoHome={onGoHome} title="Espace Commercial" />
+        <DashboardNavigation onGoHome={onGoHome} />
         
         <div className="mb-8">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent mb-2">
