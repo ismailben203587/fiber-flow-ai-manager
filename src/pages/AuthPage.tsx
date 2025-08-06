@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
-import { Wifi, Shield, Users } from 'lucide-react';
+import { Shield } from 'lucide-react';
 import NeuralNetworkBackground from '@/components/NeuralNetworkBackground';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -46,77 +46,6 @@ export function AuthPage() {
   };
 
 
-  const demoAccounts = [
-    { name: 'Admin', email: 'admin@ftth.ma', role: 'admin', color: 'from-neural-pink to-neural-purple' },
-    { name: 'Commercial', email: 'commercial@ftth.ma', role: 'commercial', color: 'from-neural-cyan to-neural-blue' },
-    { name: 'Service Technique', email: 'tech@ftth.ma', role: 'tech', color: 'from-neural-green to-neural-cyan' },
-    { name: 'Technicien', email: 'supervisor@ftth.ma', role: 'technicien', color: 'from-neural-purple to-neural-pink' }
-  ];
-
-  const handleDemoLogin = async (email: string) => {
-    setIsLoading(true);
-    try {
-      const { error } = await signIn(email, 'password123');
-      
-      if (error) {
-        toast({
-          variant: 'destructive',
-          title: 'Erreur de connexion démo',
-          description: 'Compte de démonstration non trouvé. Veuillez créer le compte d\'abord.',
-        });
-      } else {
-        toast({
-          title: 'Connexion démo réussie',
-          description: 'Vous êtes connecté avec un compte de démonstration.',
-        });
-      }
-    } catch (error) {
-      toast({
-        variant: 'destructive',
-        title: 'Erreur',
-        description: 'Une erreur inattendue s\'est produite.',
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const createDemoUsers = async () => {
-    setIsLoading(true);
-    try {
-      const { data, error } = await supabase.functions.invoke('create-demo-users');
-
-      if (error) {
-        toast({
-          variant: 'destructive',
-          title: 'Erreur de création',
-          description: error.message || 'Impossible de créer les comptes de démonstration.',
-        });
-        return;
-      }
-
-      if (data?.success) {
-        toast({
-          title: 'Comptes créés avec succès',
-          description: 'Les comptes de démonstration ont été créés. Vous pouvez maintenant vous connecter.',
-        });
-      } else {
-        toast({
-          variant: 'destructive',
-          title: 'Erreur de création',
-          description: data?.error || 'Impossible de créer les comptes de démonstration.',
-        });
-      }
-    } catch (error) {
-      toast({
-        variant: 'destructive',
-        title: 'Erreur',
-        description: 'Une erreur inattendue s\'est produite lors de la création des comptes.',
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-neural-darker via-neural-dark to-neural-dark flex items-center justify-center p-6 relative overflow-hidden">
@@ -129,13 +58,17 @@ export function AuthPage() {
       <div className="absolute bottom-10 right-10 w-40 h-40 bg-neural-cyan/10 rounded-full blur-3xl" />
       
       <div className="w-full max-w-md relative z-10">
-        {/* Header with icon */}
+        {/* Header with logo */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-neural-blue rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-neural-blue/25">
-            <Wifi className="w-8 h-8 text-white" />
+          <div className="w-20 h-20 mx-auto mb-4">
+            <img 
+              src="/lovable-uploads/c606e993-2118-4f0a-9b66-f5fa2794e6c6.png" 
+              alt="NeuraCom Logo" 
+              className="w-full h-full object-contain"
+            />
           </div>
           <h1 className="text-2xl font-bold text-neural-blue mb-2">
-            SMART TELECOM
+            NeuraCom
           </h1>
           <p className="text-neural-blue/70 text-sm">
             Connectez-vous pour accéder à votre espace de travail
@@ -185,43 +118,6 @@ export function AuthPage() {
               </CardContent>
             </Card>
 
-        {/* Demo Accounts Section */}
-        <div className="mt-8 text-center">
-          <p className="text-neural-blue/60 text-sm mb-4 border-t border-neural-blue/10 pt-4">
-            Comptes de démonstration quantique :
-          </p>
-          <div className="grid grid-cols-2 gap-3">
-            {demoAccounts.map((account) => (
-              <Button
-                key={account.email}
-                onClick={() => handleDemoLogin(account.email)}
-                disabled={isLoading}
-                variant="outline"
-                className={`bg-gradient-to-r ${account.color} border-0 text-white font-medium text-xs p-3 h-auto flex flex-col items-center space-y-1 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50`}
-              >
-                <span className="font-semibold">{account.name}</span>
-                <span className="text-xs opacity-80">{account.email}</span>
-              </Button>
-            ))}
-          </div>
-          
-          {/* Create Demo Users Button */}
-          <div className="mt-4">
-            <Button
-              onClick={createDemoUsers}
-              disabled={isLoading}
-              variant="outline"
-              className="w-full bg-gradient-to-r from-neural-green to-neural-cyan border-neural-green/30 text-white font-medium text-sm py-2 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50"
-            >
-              <Users className="w-4 h-4 mr-2" />
-              Créer les comptes de démonstration
-            </Button>
-          </div>
-          
-          <p className="text-neural-blue/40 text-xs mt-3">
-            Code quantique : password123
-          </p>
-        </div>
       </div>
     </div>
   );
