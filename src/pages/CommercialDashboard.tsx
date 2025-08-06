@@ -27,7 +27,7 @@ const CommercialDashboard = ({ onGoHome }: CommercialDashboardProps) => {
         
         <div className="mb-8">
           <h1 className="text-4xl font-bold gradient-secondary bg-clip-text text-transparent mb-2 animate-float">
-            Smart Telecom - Commercial
+            NeuraCom - Commercial
           </h1>
           <p className="text-muted-foreground">
             Plateforme de gestion commerciale et création de tickets
