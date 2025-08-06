@@ -60,11 +60,11 @@ export function AuthPage() {
       <div className="w-full max-w-md relative z-10">
         {/* Header with logo */}
         <div className="text-center mb-8">
-          <div className="w-24 h-24 mx-auto mb-4">
+          <div className="w-32 h-32 mx-auto mb-4">
             <img 
               src="/lovable-uploads/1eb6298a-d581-4a12-89d9-94b711f761a7.png" 
               alt="NeuraCom Logo" 
-              className="w-full h-full object-contain"
+              className="w-full h-full object-contain filter drop-shadow-lg"
             />
           </div>
           <h1 className="text-2xl font-bold text-neural-blue mb-2">
