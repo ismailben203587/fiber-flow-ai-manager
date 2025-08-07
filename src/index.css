@@ -58,9 +58,11 @@ All colors MUST be HSL.
     --neutral-600: 215 16% 47%;
     --neutral-200: 214 20% 90%;
     
-    /* Professional gradients */
+    /* Unified Blue Gradients for all Dashboards */
     --gradient-primary: linear-gradient(135deg, hsl(214 85% 18%) 0%, hsl(214 85% 25%) 100%);
-    --gradient-secondary: linear-gradient(135deg, hsl(210 14% 83%) 0%, hsl(214 30% 96%) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(214 85% 18%) 0%, hsl(214 85% 30%) 100%);
+    --gradient-success: linear-gradient(135deg, hsl(214 85% 18%) 0%, hsl(214 85% 35%) 100%);
+    --gradient-warning: linear-gradient(135deg, hsl(214 85% 18%) 0%, hsl(214 85% 40%) 100%);
     --gradient-card: hsl(0 0% 100% / 0.95);
     --gradient-background: linear-gradient(180deg, hsl(0 0% 99%) 0%, hsl(214 30% 98%) 100%);
     
@@ -118,9 +120,11 @@ All colors MUST be HSL.
     --neutral-600: 215 20% 65%;
     --neutral-200: 222 35% 20%;
     
-    /* Professional dark gradients */
+    /* Unified Blue Dark Gradients for all Dashboards */
     --gradient-primary: linear-gradient(135deg, hsl(214 100% 75%) 0%, hsl(214 85% 65%) 100%);
-    --gradient-secondary: linear-gradient(135deg, hsl(222 35% 20%) 0%, hsl(222 35% 15%) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(214 100% 75%) 0%, hsl(214 85% 60%) 100%);
+    --gradient-success: linear-gradient(135deg, hsl(214 100% 75%) 0%, hsl(214 85% 55%) 100%);
+    --gradient-warning: linear-gradient(135deg, hsl(214 100% 75%) 0%, hsl(214 85% 50%) 100%);
     --gradient-card: hsl(222 35% 10% / 0.95);
     --gradient-background: linear-gradient(180deg, hsl(222 35% 6%) 0%, hsl(222 35% 8%) 100%);
     
@@ -176,11 +180,11 @@ All colors MUST be HSL.
   }
   
   .gradient-success {
-    background: linear-gradient(135deg, hsl(var(--success-green)) 0%, hsl(var(--success-green) / 0.9) 100%);
+    background: var(--gradient-success);
   }
   
   .gradient-warning {
-    background: linear-gradient(135deg, hsl(var(--warning-amber)) 0%, hsl(var(--warning-amber) / 0.9) 100%);
+    background: var(--gradient-warning);
   }
   
   .gradient-danger {

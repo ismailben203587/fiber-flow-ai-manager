@@ -20,7 +20,7 @@ const TechnicalDashboard = ({ onGoHome }: TechnicalDashboardProps) => {
         <DashboardNavigation onGoHome={onGoHome} />
         
         <div className="mb-8">
-          <h1 className="text-4xl font-bold gradient-success bg-clip-text text-transparent mb-2 animate-float">
+          <h1 className="text-4xl font-bold gradient-primary bg-clip-text text-transparent mb-2 animate-float">
             Smart Telecom - Technique
           </h1>
           <p className="text-muted-foreground">
@@ -32,27 +32,27 @@ const TechnicalDashboard = ({ onGoHome }: TechnicalDashboardProps) => {
 
         <Tabs defaultValue="orders" className="space-y-6">
           <TabsList className="grid w-full grid-cols-6 glass-card">
-            <TabsTrigger value="orders" className="data-[state=active]:gradient-success data-[state=active]:text-white">
+            <TabsTrigger value="orders" className="data-[state=active]:gradient-primary data-[state=active]:text-white">
               <Wrench className="h-4 w-4 mr-2" />
               Études
             </TabsTrigger>
-            <TabsTrigger value="equipment" className="data-[state=active]:gradient-success data-[state=active]:text-white">
+            <TabsTrigger value="equipment" className="data-[state=active]:gradient-primary data-[state=active]:text-white">
               <Network className="h-4 w-4 mr-2" />
               Équipements
             </TabsTrigger>
-            <TabsTrigger value="tickets" className="data-[state=active]:gradient-success data-[state=active]:text-white">
+            <TabsTrigger value="tickets" className="data-[state=active]:gradient-primary data-[state=active]:text-white">
               <AlertCircle className="h-4 w-4 mr-2" />
               Tickets
             </TabsTrigger>
-            <TabsTrigger value="map" className="data-[state=active]:gradient-success data-[state=active]:text-white">
+            <TabsTrigger value="map" className="data-[state=active]:gradient-primary data-[state=active]:text-white">
               <MapPin className="h-4 w-4 mr-2" />
               Cartographie
             </TabsTrigger>
-            <TabsTrigger value="reports" className="data-[state=active]:gradient-success data-[state=active]:text-white">
+            <TabsTrigger value="reports" className="data-[state=active]:gradient-primary data-[state=active]:text-white">
               <FileText className="h-4 w-4 mr-2" />
               Rapports
             </TabsTrigger>
-            <TabsTrigger value="monitoring" className="data-[state=active]:gradient-success data-[state=active]:text-white">
+            <TabsTrigger value="monitoring" className="data-[state=active]:gradient-primary data-[state=active]:text-white">
               <Router className="h-4 w-4 mr-2" />
               Monitoring
             </TabsTrigger>

@@ -24,7 +24,7 @@ const TechnicienDashboard = ({ onGoHome }: TechnicienDashboardProps) => {
         <DashboardNavigation onGoHome={onGoHome} />
         
         <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold gradient-warning bg-clip-text text-transparent animate-float">
+          <h1 className="text-4xl font-bold gradient-primary bg-clip-text text-transparent animate-float">
             SMART TELECOM Technicien
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
