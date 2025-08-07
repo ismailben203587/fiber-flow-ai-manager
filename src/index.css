@@ -9,7 +9,7 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Light theme - Holographic Colors */
+    /* Light theme - Professional Colors */
     --background: 0 0% 99%;
     --foreground: 222 25% 8%;
 
@@ -19,61 +19,61 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 222 25% 8%;
 
-    --primary: 280 100% 70%;
+    --primary: 214 85% 18%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 195 100% 80%;
+    --secondary: 210 14% 83%;
     --secondary-foreground: 222 25% 8%;
 
-    --muted: 280 30% 96%;
-    --muted-foreground: 280 16% 47%;
+    --muted: 214 30% 96%;
+    --muted-foreground: 215 16% 47%;
 
-    --accent: 280 100% 95%;
-    --accent-foreground: 280 100% 30%;
+    --accent: 214 85% 95%;
+    --accent-foreground: 214 85% 18%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 280 20% 90%;
-    --input: 280 20% 90%;
-    --ring: 280 100% 70%;
+    --border: 214 20% 90%;
+    --input: 214 20% 90%;
+    --ring: 214 85% 18%;
 
     --radius: 0.5rem;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 222 25% 8%;
-    --sidebar-primary: 280 100% 70%;
+    --sidebar-primary: 214 85% 18%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 280 30% 96%;
+    --sidebar-accent: 214 30% 96%;
     --sidebar-accent-foreground: 222 25% 8%;
-    --sidebar-border: 280 20% 90%;
-    --sidebar-ring: 280 100% 70%;
+    --sidebar-border: 214 20% 90%;
+    --sidebar-ring: 214 85% 18%;
 
-    /* Holographic color palette */
-    --holographic-pink: 320 100% 75%;
-    --holographic-purple: 280 100% 70%;
-    --holographic-cyan: 195 100% 75%;
-    --holographic-blue: 220 100% 75%;
-    --glass-effect: rgba(255, 255, 255, 0.1);
+    /* Professional color palette */
+    --primary-blue: 214 85% 18%;
+    --primary-light: 214 85% 95%;
+    --success-green: 142 71% 45%;
+    --warning-amber: 38 92% 50%;
+    --danger-red: 0 72% 51%;
+    --neutral-600: 215 16% 47%;
+    --neutral-200: 214 20% 90%;
     
-    /* Holographic Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(320 100% 75%) 0%, hsl(280 100% 70%) 50%, hsl(195 100% 75%) 100%);
-    --gradient-secondary: linear-gradient(135deg, hsl(280 100% 70%) 0%, hsl(195 100% 75%) 100%);
-    --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
-    --gradient-card: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
-    --gradient-background: linear-gradient(180deg, hsl(0 0% 99%) 0%, hsl(280 30% 98%) 100%);
+    /* Unified Blue Gradients for all Dashboards */
+    --gradient-primary: linear-gradient(135deg, hsl(214 85% 18%) 0%, hsl(214 85% 25%) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(214 85% 18%) 0%, hsl(214 85% 30%) 100%);
+    --gradient-success: linear-gradient(135deg, hsl(214 85% 18%) 0%, hsl(214 85% 35%) 100%);
+    --gradient-warning: linear-gradient(135deg, hsl(214 85% 18%) 0%, hsl(214 85% 40%) 100%);
+    --gradient-card: hsl(0 0% 100% / 0.95);
+    --gradient-background: linear-gradient(180deg, hsl(0 0% 99%) 0%, hsl(214 30% 98%) 100%);
     
-    /* Holographic shadows and glows */
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    --glow-pink: 0 0 20px hsl(320 100% 75% / 0.5);
-    --glow-cyan: 0 0 20px hsl(195 100% 75% / 0.5);
-    --glow-purple: 0 0 20px hsl(280 100% 70% / 0.5);
+    /* Professional shadows */
+    --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.05);
+    --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.1), 0 2px 4px -1px hsl(0 0% 0% / 0.06);
+    --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.1), 0 4px 6px -2px hsl(0 0% 0% / 0.05);
   }
 
   .dark {
-    /* Dark theme - Holographic Colors */
+    /* Dark theme - Professional Colors */
     --background: 222 35% 6%;
     --foreground: 210 40% 98%;
 
@@ -83,11 +83,11 @@ All colors MUST be HSL.
     --popover: 222 35% 10%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 320 100% 75%;
+    --primary: 214 100% 75%;
     --primary-foreground: 222 35% 6%;
 
-    --secondary: 195 100% 75%;
-    --secondary-foreground: 222 35% 6%;
+    --secondary: 222 35% 20%;
+    --secondary-foreground: 210 40% 98%;
 
     --muted: 222 35% 15%;
     --muted-foreground: 215 20% 65%;
@@ -100,38 +100,38 @@ All colors MUST be HSL.
 
     --border: 222 35% 20%;
     --input: 222 35% 15%;
-    --ring: 320 100% 75%;
+    --ring: 214 100% 75%;
 
     --sidebar-background: 222 35% 8%;
     --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 320 100% 75%;
+    --sidebar-primary: 214 100% 75%;
     --sidebar-primary-foreground: 222 35% 6%;
     --sidebar-accent: 222 35% 15%;
     --sidebar-accent-foreground: 210 40% 98%;
     --sidebar-border: 222 35% 20%;
-    --sidebar-ring: 320 100% 75%;
+    --sidebar-ring: 214 100% 75%;
     
-    /* Holographic dark theme colors */
-    --holographic-pink: 320 100% 75%;
-    --holographic-purple: 280 100% 70%;
-    --holographic-cyan: 195 100% 75%;
-    --holographic-blue: 220 100% 75%;
-    --glass-effect: rgba(255, 255, 255, 0.05);
+    /* Professional dark theme colors */
+    --primary-blue: 214 100% 75%;
+    --primary-light: 214 85% 15%;
+    --success-green: 142 71% 55%;
+    --warning-amber: 38 92% 60%;
+    --danger-red: 0 72% 61%;
+    --neutral-600: 215 20% 65%;
+    --neutral-200: 222 35% 20%;
     
-    /* Holographic Dark Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(320 100% 75%) 0%, hsl(280 100% 70%) 50%, hsl(195 100% 75%) 100%);
-    --gradient-secondary: linear-gradient(135deg, hsl(280 100% 70%) 0%, hsl(195 100% 75%) 100%);
-    --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 100%);
-    --gradient-card: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    /* Unified Blue Dark Gradients for all Dashboards */
+    --gradient-primary: linear-gradient(135deg, hsl(214 100% 75%) 0%, hsl(214 85% 65%) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(214 100% 75%) 0%, hsl(214 85% 60%) 100%);
+    --gradient-success: linear-gradient(135deg, hsl(214 100% 75%) 0%, hsl(214 85% 55%) 100%);
+    --gradient-warning: linear-gradient(135deg, hsl(214 100% 75%) 0%, hsl(214 85% 50%) 100%);
+    --gradient-card: hsl(222 35% 10% / 0.95);
     --gradient-background: linear-gradient(180deg, hsl(222 35% 6%) 0%, hsl(222 35% 8%) 100%);
     
-    /* Holographic dark shadows and glows */
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
-    --glow-pink: 0 0 30px hsl(320 100% 75% / 0.6);
-    --glow-cyan: 0 0 30px hsl(195 100% 75% / 0.6);
-    --glow-purple: 0 0 30px hsl(280 100% 70% / 0.6);
+    /* Professional dark shadows */
+    --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.15);
+    --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.25), 0 2px 4px -1px hsl(0 0% 0% / 0.1);
+    --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.35), 0 4px 6px -2px hsl(0 0% 0% / 0.15);
   }
 }
 
@@ -159,27 +159,12 @@ All colors MUST be HSL.
     background: var(--gradient-card);
     border: 1px solid hsl(var(--border));
     box-shadow: var(--shadow-md);
-    backdrop-filter: blur(10px);
   }
   
   .glass-card {
-    background: var(--gradient-glass);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: hsl(var(--card) / 0.95);
+    border: 1px solid hsl(var(--border));
     box-shadow: var(--shadow-sm);
-    backdrop-filter: blur(20px);
-  }
-  
-  .holographic-card {
-    background: var(--gradient-card);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: var(--shadow-md), var(--glow-pink);
-    backdrop-filter: blur(15px);
-    transition: all 0.3s ease-in-out;
-  }
-  
-  .holographic-card:hover {
-    box-shadow: var(--shadow-lg), var(--glow-cyan);
-    transform: translateY(-4px) scale(1.02);
   }
   
   .professional-card {
@@ -195,15 +180,15 @@ All colors MUST be HSL.
   }
   
   .gradient-success {
-    background: linear-gradient(135deg, hsl(142 71% 45%) 0%, hsl(142 71% 55%) 100%);
+    background: var(--gradient-success);
   }
   
   .gradient-warning {
-    background: linear-gradient(135deg, hsl(38 92% 50%) 0%, hsl(38 92% 60%) 100%);
+    background: var(--gradient-warning);
   }
   
   .gradient-danger {
-    background: linear-gradient(135deg, hsl(var(--destructive)) 0%, hsl(var(--destructive) / 0.9) 100%);
+    background: linear-gradient(135deg, hsl(var(--danger-red)) 0%, hsl(var(--danger-red) / 0.9) 100%);
   }
 }
 
@@ -245,21 +230,5 @@ All colors MUST be HSL.
       opacity: 1;
       transform: translateY(0);
     }
-  }
-  
-  @keyframes holographicGlow {
-    0%, 100% {
-      box-shadow: var(--glow-pink);
-    }
-    33% {
-      box-shadow: var(--glow-purple);
-    }
-    66% {
-      box-shadow: var(--glow-cyan);
-    }
-  }
-  
-  .animate-holographic {
-    animation: holographicGlow 3s ease-in-out infinite;
   }
 }

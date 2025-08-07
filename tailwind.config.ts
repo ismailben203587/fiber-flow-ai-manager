@@ -62,11 +62,14 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				holographic: {
-					pink: 'hsl(var(--holographic-pink))',
-					purple: 'hsl(var(--holographic-purple))',
-					cyan: 'hsl(var(--holographic-cyan))',
-					blue: 'hsl(var(--holographic-blue))'
+				neural: {
+					dark: 'hsl(var(--neural-dark))',
+					darker: 'hsl(var(--neural-darker))',
+					blue: 'hsl(var(--neural-blue))',
+					green: 'hsl(var(--neural-green))',
+					purple: 'hsl(var(--neural-purple))',
+					pink: 'hsl(var(--neural-pink))',
+					cyan: 'hsl(var(--neural-cyan))'
 				}
 			},
 			borderRadius: {
