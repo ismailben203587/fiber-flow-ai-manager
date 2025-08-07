@@ -61,14 +61,17 @@ const Index = () => {
         <div className="flex justify-end mb-6">
           <ThemeToggle />
         </div>
-        <div className="text-center space-y-4">
-          <h1 className="text-5xl font-bold gradient-neural bg-clip-text text-transparent animate-float">
-            Sélection SMART TELECOM
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+        <div className="text-center space-y-6 animate-fade-in">
+          <div className="space-y-3">
+            <h1 className="text-4xl font-semibold text-foreground tracking-tight">
+              NeuraCom
+            </h1>
+            <div className="w-16 h-1 bg-primary mx-auto rounded-full"></div>
+          </div>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto font-medium">
             {hasRole('admin') ? 
-              'En tant qu\'administrateur, vous avez accès à tous les tableaux de bord' :
-              'Choisissez votre espace de travail'
+              'Tableau de bord administrateur - Accès complet aux modules système' :
+              'Sélectionnez votre module de travail'
             }
           </p>
         </div>
@@ -77,24 +80,24 @@ const Index = () => {
           {/* Commercial Dashboard Card */}
           {(hasRole('admin') || hasRole('commercial')) && (
             <Card 
-              className="glass-card hover:scale-105 transition-all duration-300 cursor-pointer group animate-glow"
+              className="professional-card cursor-pointer group animate-slide-up"
               onClick={() => setCurrentDashboard('commercial')}
             >
-              <CardHeader className="text-center space-y-4">
-                <div className="mx-auto p-4 gradient-secondary rounded-full w-fit group-hover:scale-110 transition-transform duration-300">
-                  <BarChart3 className="w-8 h-8 text-white" />
+              <CardHeader className="text-center space-y-6 pb-4">
+                <div className="mx-auto p-6 bg-primary rounded-lg w-fit group-hover:bg-primary/90 transition-colors">
+                  <BarChart3 className="w-8 h-8 text-primary-foreground" />
                 </div>
-                <CardTitle className="text-2xl font-bold text-foreground">
-                  Dashboard Commercial
+                <CardTitle className="text-xl font-semibold text-foreground">
+                  Module Commercial
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-muted-foreground text-center">
+              <CardContent className="space-y-6">
+                <p className="text-muted-foreground text-center leading-relaxed">
                   Gestion des commandes FTTH, support client et analyses commerciales
                 </p>
-                <Button className="w-full gradient-secondary text-white hover:opacity-80 transition-all duration-300">
-                  Accéder au Dashboard
-                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground transition-colors">
+                  Accéder au module
+                  <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </CardContent>
             </Card>
@@ -103,24 +106,24 @@ const Index = () => {
           {/* Technical Dashboard Card */}
           {(hasRole('admin') || hasRole('tech')) && (
             <Card 
-              className="glass-card hover:scale-105 transition-all duration-300 cursor-pointer group animate-glow"
+              className="professional-card cursor-pointer group animate-slide-up"
               onClick={() => setCurrentDashboard('technical')}
             >
-              <CardHeader className="text-center space-y-4">
-                <div className="mx-auto p-4 gradient-success rounded-full w-fit group-hover:scale-110 transition-transform duration-300">
+              <CardHeader className="text-center space-y-6 pb-4">
+                <div className="mx-auto p-6 gradient-success rounded-lg w-fit group-hover:opacity-90 transition-opacity">
                   <Settings className="w-8 h-8 text-white" />
                 </div>
-                <CardTitle className="text-2xl font-bold text-foreground">
-                  Dashboard Technique
+                <CardTitle className="text-xl font-semibold text-foreground">
+                  Module Technique
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-muted-foreground text-center">
+              <CardContent className="space-y-6">
+                <p className="text-muted-foreground text-center leading-relaxed">
                   Gestion des équipements, interventions techniques et maintenance réseau
                 </p>
-                <Button className="w-full gradient-success text-white hover:opacity-80 transition-all duration-300">
-                  Accéder au Dashboard
-                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                <Button className="w-full gradient-success text-white hover:opacity-90 transition-opacity">
+                  Accéder au module
+                  <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </CardContent>
             </Card>
@@ -129,24 +132,24 @@ const Index = () => {
           {/* Technicien Dashboard Card */}
           {(hasRole('admin') || hasRole('technicien')) && (
             <Card 
-              className="glass-card hover:scale-105 transition-all duration-300 cursor-pointer group animate-glow"
+              className="professional-card cursor-pointer group animate-slide-up"
               onClick={() => setCurrentDashboard('technicien')}
             >
-              <CardHeader className="text-center space-y-4">
-                <div className="mx-auto p-4 gradient-warning rounded-full w-fit group-hover:scale-110 transition-transform duration-300">
+              <CardHeader className="text-center space-y-6 pb-4">
+                <div className="mx-auto p-6 gradient-warning rounded-lg w-fit group-hover:opacity-90 transition-opacity">
                   <Users className="w-8 h-8 text-white" />
                 </div>
-                <CardTitle className="text-2xl font-bold text-foreground">
-                  Dashboard Technicien
+                <CardTitle className="text-xl font-semibold text-foreground">
+                  Module Technicien
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-muted-foreground text-center">
+              <CardContent className="space-y-6">
+                <p className="text-muted-foreground text-center leading-relaxed">
                   Gestion des interventions et tickets assignés
                 </p>
-                <Button className="w-full gradient-warning text-white hover:opacity-80 transition-all duration-300">
-                  Accéder au Dashboard
-                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                <Button className="w-full gradient-warning text-white hover:opacity-90 transition-opacity">
+                  Accéder au module
+                  <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </CardContent>
             </Card>
@@ -155,33 +158,33 @@ const Index = () => {
           {/* Admin Dashboard Card */}
           {hasRole('admin') && (
             <Card 
-              className="glass-card hover:scale-105 transition-all duration-300 cursor-pointer group animate-glow md:col-span-2 lg:col-span-1"
+              className="professional-card cursor-pointer group animate-slide-up md:col-span-2 lg:col-span-1"
               onClick={() => setCurrentDashboard('admin')}
             >
-              <CardHeader className="text-center space-y-4">
-                <div className="mx-auto p-4 gradient-primary rounded-full w-fit group-hover:scale-110 transition-transform duration-300">
-                  <ShieldCheck className="w-8 h-8 text-white" />
+              <CardHeader className="text-center space-y-6 pb-4">
+                <div className="mx-auto p-6 bg-primary rounded-lg w-fit group-hover:bg-primary/90 transition-colors">
+                  <ShieldCheck className="w-8 h-8 text-primary-foreground" />
                 </div>
-                <CardTitle className="text-2xl font-bold text-foreground">
-                  Dashboard Admin
+                <CardTitle className="text-xl font-semibold text-foreground">
+                  Module Administration
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-muted-foreground text-center">
-                  Administration système et accès à tous les dashboards
+              <CardContent className="space-y-6">
+                <p className="text-muted-foreground text-center leading-relaxed">
+                  Administration système et accès à tous les modules
                 </p>
-                <Button className="w-full gradient-primary text-white hover:opacity-80 transition-all duration-300">
-                  Accéder au Dashboard
-                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground transition-colors">
+                  Accéder au module
+                  <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </CardContent>
             </Card>
           )}
         </div>
 
-        <div className="text-center">
+        <div className="text-center pt-8 border-t border-border">
           <p className="text-sm text-muted-foreground">
-            Votre accès est déterminé par votre rôle utilisateur
+            Accès sécurisé basé sur les permissions utilisateur
           </p>
         </div>
       </div>
