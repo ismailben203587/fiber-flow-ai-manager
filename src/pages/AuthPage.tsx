@@ -49,20 +49,21 @@ export function AuthPage() {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-neural-darker via-neural-dark to-neural-dark flex items-center justify-center p-6 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background flex items-center justify-center p-6 relative overflow-hidden">
       {/* AI Background Image */}
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30"
         style={{ backgroundImage: `url(${aiBackground})` }}
       />
       
       {/* Neural Network Background */}
       <NeuralNetworkBackground />
       
-      {/* Background effects */}
-      <div className="absolute inset-0 bg-gradient-to-r from-neural-blue/5 via-transparent to-neural-cyan/5" />
-      <div className="absolute top-10 left-10 w-32 h-32 bg-neural-blue/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-10 right-10 w-40 h-40 bg-neural-cyan/10 rounded-full blur-3xl" />
+      {/* Holographic Background effects */}
+      <div className="absolute inset-0 bg-gradient-to-r from-holographic-pink/10 via-transparent to-holographic-cyan/10" />
+      <div className="absolute top-10 left-10 w-32 h-32 bg-holographic-pink/20 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute bottom-10 right-10 w-40 h-40 bg-holographic-cyan/20 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-holographic-purple/5 rounded-full blur-3xl" />
       
       <div className="w-full max-w-md relative z-10">
         {/* Header with logo */}
@@ -74,19 +75,19 @@ export function AuthPage() {
               className="w-full h-full object-contain filter drop-shadow-lg"
             />
           </div>
-          <h1 className="text-2xl font-bold text-neural-blue mb-2">
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-holographic-pink to-holographic-cyan bg-clip-text text-transparent mb-2">
             NeuraCom
           </h1>
-          <p className="text-neural-blue/70 text-sm">
+          <p className="text-muted-foreground text-sm">
             Connectez-vous pour accéder à votre espace de travail
           </p>
         </div>
 
-        <Card className="border border-neural-blue/20 bg-neural-dark/50 backdrop-blur-xl shadow-2xl shadow-neural-blue/10">
+        <Card className="holographic-card animate-holographic">
           <CardContent className="p-6">
             <form onSubmit={handleLogin} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="login-email" className="text-neural-blue/90 text-sm font-medium">
+                    <Label htmlFor="login-email" className="text-foreground/90 text-sm font-medium">
                       Email
                     </Label>
                     <Input
@@ -96,11 +97,11 @@ export function AuthPage() {
                       value={loginForm.email}
                       onChange={(e) => setLoginForm({ ...loginForm, email: e.target.value })}
                       required
-                      className="bg-neural-darker/60 border-neural-blue/30 text-neural-blue placeholder-neural-blue/50 focus:border-neural-cyan focus:ring-neural-cyan/20"
+                      className="bg-background/60 border-border text-foreground placeholder-muted-foreground focus:border-primary focus:ring-primary/20"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="login-password" className="text-neural-blue/90 text-sm font-medium">
+                    <Label htmlFor="login-password" className="text-foreground/90 text-sm font-medium">
                       Mot de passe
                     </Label>
                     <Input
@@ -110,12 +111,12 @@ export function AuthPage() {
                       value={loginForm.password}
                       onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
                       required
-                      className="bg-neural-darker/60 border-neural-blue/30 text-neural-blue placeholder-neural-blue/50 focus:border-neural-cyan focus:ring-neural-cyan/20"
+                      className="bg-background/60 border-border text-foreground placeholder-muted-foreground focus:border-primary focus:ring-primary/20"
                     />
                   </div>
                   <Button 
                     type="submit" 
-                    className="w-full bg-gradient-to-r from-neural-blue to-neural-cyan hover:from-neural-cyan hover:to-neural-blue text-white font-medium py-3 transition-all duration-300 shadow-lg shadow-neural-blue/25" 
+                    className="w-full gradient-primary text-white font-medium py-3 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105" 
                     disabled={isLoading}
                   >
                     <Shield className="w-4 h-4 mr-2" />
