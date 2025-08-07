@@ -8,6 +8,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { Shield } from 'lucide-react';
 import NeuralNetworkBackground from '@/components/NeuralNetworkBackground';
 import { supabase } from '@/integrations/supabase/client';
+import aiBackground from '@/assets/ai-background.jpg';
 
 export function AuthPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -49,6 +50,12 @@ export function AuthPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-neural-darker via-neural-dark to-neural-dark flex items-center justify-center p-6 relative overflow-hidden">
+      {/* AI Background Image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
+        style={{ backgroundImage: `url(${aiBackground})` }}
+      />
+      
       {/* Neural Network Background */}
       <NeuralNetworkBackground />
       
