@@ -26,7 +26,7 @@ const DashboardStats = () => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-      <Card className="gradient-telecom text-white">
+      <Card className="gradient-primary text-white">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Équipements PCO</CardTitle>
           <Network className="h-4 w-4" />
@@ -41,7 +41,7 @@ const DashboardStats = () => {
         </CardContent>
       </Card>
 
-      <Card className="gradient-success text-white">
+      <Card className="gradient-secondary text-white">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Équipements MSAN</CardTitle>
           <Router className="h-4 w-4" />
@@ -56,7 +56,7 @@ const DashboardStats = () => {
         </CardContent>
       </Card>
 
-      <Card className="gradient-warning text-white">
+      <Card className="gradient-success text-white">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Commandes FTTH</CardTitle>
           <Users className="h-4 w-4" />
@@ -69,14 +69,14 @@ const DashboardStats = () => {
             {ordersLoading ? "Chargement..." : `${feasibleOrders} faisables`}
           </p>
           <div className="flex gap-1 mt-2">
-            <Badge variant="secondary" className="text-xs">
+            <Badge variant="secondary" className="text-xs bg-white/20 text-white">
               En attente
             </Badge>
           </div>
         </CardContent>
       </Card>
 
-      <Card className="gradient-danger text-white">
+      <Card className="gradient-warning text-white">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Réclamations</CardTitle>
           <AlertCircle className="h-4 w-4" />
@@ -89,7 +89,7 @@ const DashboardStats = () => {
             {complaintsLoading ? "Chargement..." : `${criticalComplaints} critiques`}
           </p>
           <div className="flex gap-1 mt-2">
-            <Badge variant="destructive" className="text-xs">
+            <Badge variant="destructive" className="text-xs bg-red-500/20 text-red-200">
               Ouvertes
             </Badge>
           </div>

@@ -20,66 +20,66 @@ const TechnicalStats = () => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-      <Card className="bg-slate-800/50 border-blue-600/20 text-white">
+      <Card className="gradient-primary text-white">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-blue-200">Équipements PCO</CardTitle>
-          <Network className="h-4 w-4 text-blue-400" />
+          <CardTitle className="text-sm font-medium">Équipements PCO</CardTitle>
+          <Network className="h-4 w-4" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold text-blue-100">
+          <div className="text-2xl font-bold">
             {pcoLoading ? "..." : activePCO}
           </div>
-          <p className="text-xs text-blue-300">
+          <p className="text-xs opacity-90">
             {pcoLoading ? "Chargement..." : `${activePCO} actifs sur ${pcoEquipment.length} total`}
           </p>
         </CardContent>
       </Card>
 
-      <Card className="bg-slate-800/50 border-blue-600/20 text-white">
+      <Card className="gradient-secondary text-white">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-blue-200">Équipements MSAN</CardTitle>
-          <Router className="h-4 w-4 text-blue-400" />
+          <CardTitle className="text-sm font-medium">Équipements MSAN</CardTitle>
+          <Router className="h-4 w-4" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold text-blue-100">
+          <div className="text-2xl font-bold">
             {msanLoading ? "..." : activeMSAN}
           </div>
-          <p className="text-xs text-blue-300">
+          <p className="text-xs opacity-90">
             {msanLoading ? "Chargement..." : `${activeMSAN} actifs sur ${msanEquipment.length} total`}
           </p>
         </CardContent>
       </Card>
 
-      <Card className="bg-slate-800/50 border-orange-600/20 text-white">
+      <Card className="gradient-success text-white">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-orange-200">Études Techniques</CardTitle>
-          <Activity className="h-4 w-4 text-orange-400" />
+          <CardTitle className="text-sm font-medium">Études Techniques</CardTitle>
+          <Activity className="h-4 w-4" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold text-orange-100">
+          <div className="text-2xl font-bold">
             {ordersLoading ? "..." : technicalOrders}
           </div>
-          <p className="text-xs text-orange-300">
+          <p className="text-xs opacity-90">
             {ordersLoading ? "Chargement..." : "En cours d'analyse"}
           </p>
           <div className="flex gap-1 mt-2">
-            <Badge variant="secondary" className="text-xs bg-orange-500/20 text-orange-200">
+            <Badge variant="secondary" className="text-xs bg-white/20 text-white">
               Prioritaire
             </Badge>
           </div>
         </CardContent>
       </Card>
 
-      <Card className="bg-slate-800/50 border-red-600/20 text-white">
+      <Card className="gradient-warning text-white">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-red-200">Incidents Critiques</CardTitle>
-          <AlertTriangle className="h-4 w-4 text-red-400" />
+          <CardTitle className="text-sm font-medium">Incidents Critiques</CardTitle>
+          <AlertTriangle className="h-4 w-4" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold text-red-100">
+          <div className="text-2xl font-bold">
             {complaintsLoading ? "..." : criticalIssues}
           </div>
-          <p className="text-xs text-red-300">
+          <p className="text-xs opacity-90">
             {complaintsLoading ? "Chargement..." : "Intervention requise"}
           </p>
           <div className="flex gap-1 mt-2">
