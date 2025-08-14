@@ -2,18 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { MapPin, Download } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
-interface AddressData {
-  Province: string;
-  COMMUNE: string;
-  QUARTIER: string;
-  VOIE: string;
-  ZONE?: string;
-  'Identifiant PCO'?: string;
+interface MLAddress {
+  province: string;
+  commune: string;
+  quartier: string;
+  voie: string;
+  zone?: string;
+  identifiant_pco?: string;
 }
 
 interface StructuredAddressInputProps {
@@ -34,28 +33,25 @@ const StructuredAddressInput: React.FC<StructuredAddressInputProps> = ({
     voie: ''
   });
   
-  const [mlAddresses, setMlAddresses] = useState<AddressData[]>([]);
+  const [mlAddresses, setMlAddresses] = useState<MLAddress[]>([]);
   const [availableCommunes, setAvailableCommunes] = useState<string[]>([]);
   const [availableQuartiers, setAvailableQuartiers] = useState<string[]>([]);
   const [availableVoies, setAvailableVoies] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Load ML addresses data
+  // Load ML addresses data from database
   const loadMLAddresses = async () => {
     setIsLoading(true);
     try {
-      console.log('Chargement des adresses ML...');
-      const response = await supabase.functions.invoke('ml-feasibility-prediction', {
-        body: { action: 'get_training_data' }
-      });
+      const { data, error } = await supabase
+        .from('ml_addresses')
+        .select('province, commune, quartier, voie, zone, identifiant_pco');
       
-      console.log('Réponse ML:', response);
-      
-      if (response.data?.success && response.data?.data) {
-        console.log('Données ML reçues:', response.data.data.length, 'adresses');
-        setMlAddresses(response.data.data);
-      } else {
-        console.error('Erreur dans la réponse ML:', response.data);
+      if (error) {
+        console.error('Error loading ML addresses:', error);
+      } else if (data) {
+        console.log('Adresses ML chargées:', data.length);
+        setMlAddresses(data);
       }
     } catch (error) {
       console.error('Error loading ML addresses:', error);
@@ -63,6 +59,7 @@ const StructuredAddressInput: React.FC<StructuredAddressInputProps> = ({
     setIsLoading(false);
   };
 
+  // Load addresses on component mount
   useEffect(() => {
     loadMLAddresses();
   }, []);
@@ -72,8 +69,8 @@ const StructuredAddressInput: React.FC<StructuredAddressInputProps> = ({
     if (addressData.province) {
       const communes = [...new Set(
         mlAddresses
-          .filter(addr => addr.Province === addressData.province)
-          .map(addr => addr.COMMUNE)
+          .filter(addr => addr.province === addressData.province)
+          .map(addr => addr.commune)
       )];
       setAvailableCommunes(communes);
     } else {
@@ -86,10 +83,10 @@ const StructuredAddressInput: React.FC<StructuredAddressInputProps> = ({
       const quartiers = [...new Set(
         mlAddresses
           .filter(addr => 
-            addr.Province === addressData.province && 
-            addr.COMMUNE === addressData.commune
+            addr.province === addressData.province && 
+            addr.commune === addressData.commune
           )
-          .map(addr => addr.QUARTIER)
+          .map(addr => addr.quartier)
       )];
       setAvailableQuartiers(quartiers);
     } else {
@@ -102,11 +99,11 @@ const StructuredAddressInput: React.FC<StructuredAddressInputProps> = ({
       const voies = [...new Set(
         mlAddresses
           .filter(addr => 
-            addr.Province === addressData.province && 
-            addr.COMMUNE === addressData.commune &&
-            addr.QUARTIER === addressData.quartier
+            addr.province === addressData.province && 
+            addr.commune === addressData.commune &&
+            addr.quartier === addressData.quartier
           )
-          .map(addr => addr.VOIE)
+          .map(addr => addr.voie)
       )];
       setAvailableVoies(voies);
     } else {
@@ -141,15 +138,6 @@ const StructuredAddressInput: React.FC<StructuredAddressInputProps> = ({
     }
   }, [value]);
 
-  const handleAddressSelect = (selectedAddress: AddressData) => {
-    setAddressData({
-      province: selectedAddress.Province,
-      commune: selectedAddress.COMMUNE,
-      quartier: selectedAddress.QUARTIER,
-      voie: selectedAddress.VOIE
-    });
-  };
-
   const resetAddress = () => {
     setAddressData({
       province: '',
@@ -160,7 +148,7 @@ const StructuredAddressInput: React.FC<StructuredAddressInputProps> = ({
     onChange('');
   };
 
-  const provinces = [...new Set(mlAddresses.map(addr => addr.Province))];
+  const provinces = [...new Set(mlAddresses.map(addr => addr.province))];
 
   return (
     <div className="space-y-4">
@@ -169,26 +157,9 @@ const StructuredAddressInput: React.FC<StructuredAddressInputProps> = ({
           <MapPin className="h-4 w-4" />
           Adresse structurée
         </Label>
-        <div className="flex gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={loadMLAddresses}
-            disabled={isLoading}
-          >
-            <Download className="h-4 w-4 mr-1" />
-            {isLoading ? 'Chargement...' : 'Charger adresses'}
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={resetAddress}
-          >
-            Réinitialiser
-          </Button>
-        </div>
+        {isLoading && (
+          <span className="text-xs text-muted-foreground">Chargement...</span>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -197,7 +168,7 @@ const StructuredAddressInput: React.FC<StructuredAddressInputProps> = ({
           <Select
             value={addressData.province}
             onValueChange={(value) => setAddressData({ ...addressData, province: value, commune: '', quartier: '', voie: '' })}
-            disabled={disabled}
+            disabled={disabled || isLoading}
           >
             <SelectTrigger>
               <SelectValue placeholder="Sélectionner une province" />
@@ -217,7 +188,7 @@ const StructuredAddressInput: React.FC<StructuredAddressInputProps> = ({
           <Select
             value={addressData.commune}
             onValueChange={(value) => setAddressData({ ...addressData, commune: value, quartier: '', voie: '' })}
-            disabled={disabled || !addressData.province}
+            disabled={disabled || !addressData.province || isLoading}
           >
             <SelectTrigger>
               <SelectValue placeholder="Sélectionner une commune" />
@@ -237,7 +208,7 @@ const StructuredAddressInput: React.FC<StructuredAddressInputProps> = ({
           <Select
             value={addressData.quartier}
             onValueChange={(value) => setAddressData({ ...addressData, quartier: value, voie: '' })}
-            disabled={disabled || !addressData.commune}
+            disabled={disabled || !addressData.commune || isLoading}
           >
             <SelectTrigger>
               <SelectValue placeholder="Sélectionner un quartier" />
@@ -257,7 +228,7 @@ const StructuredAddressInput: React.FC<StructuredAddressInputProps> = ({
           <Select
             value={addressData.voie}
             onValueChange={(value) => setAddressData({ ...addressData, voie: value })}
-            disabled={disabled || !addressData.quartier}
+            disabled={disabled || !addressData.quartier || isLoading}
           >
             <SelectTrigger>
               <SelectValue placeholder="Sélectionner une voie" />
@@ -287,7 +258,7 @@ const StructuredAddressInput: React.FC<StructuredAddressInputProps> = ({
 
       {mlAddresses.length > 0 && (
         <div className="text-xs text-muted-foreground">
-          {mlAddresses.length} adresses disponibles dans la base de données ML
+          {mlAddresses.length} adresses disponibles dans la base de données
         </div>
       )}
     </div>

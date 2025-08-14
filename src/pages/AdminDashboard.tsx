@@ -5,7 +5,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import DashboardNavigation from '@/components/DashboardNavigation';
 import CommercialDashboard from './CommercialDashboard';
 import TechnicalDashboard from './TechnicalDashboard';
-import { Users, Shield, Settings, BarChart3 } from 'lucide-react';
+import MLAddressManager from '@/components/MLAddressManager';
+import { Users, Shield, Settings, BarChart3, Database } from 'lucide-react';
 
 interface AdminDashboardProps {
   onGoHome: () => void;
@@ -131,12 +132,21 @@ const AdminDashboard = ({ onGoHome }: AdminDashboardProps) => {
                     Paramètres système
                   </Button>
                   <Button variant="outline" className="justify-start hover:bg-primary hover:text-primary-foreground transition-colors">
-                    <BarChart3 className="w-4 h-4 mr-2" />
+                    <BarChart3 className="w-4 w-4 mr-2" />
                     Rapports globaux
                   </Button>
                 </div>
               </CardContent>
             </Card>
+
+            {/* Section Gestion des Adresses ML */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <Database className="w-5 h-5" />
+                <h2 className="text-xl font-semibold">Gestion des Adresses ML</h2>
+              </div>
+              <MLAddressManager />
+            </div>
           </TabsContent>
         </Tabs>
       </div>

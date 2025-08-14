@@ -7,10 +7,10 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "12.2.3 (519615d)"
+    PostgrestVersion: "13.0.4"
   }
   public: {
     Tables: {
@@ -221,6 +221,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      ml_addresses: {
+        Row: {
+          capacite: number | null
+          commune: string
+          created_at: string
+          faisabilite: string | null
+          id: string
+          identifiant_pco: string | null
+          province: string
+          quartier: string
+          updated_at: string
+          voie: string
+          zone: string | null
+        }
+        Insert: {
+          capacite?: number | null
+          commune: string
+          created_at?: string
+          faisabilite?: string | null
+          id?: string
+          identifiant_pco?: string | null
+          province: string
+          quartier: string
+          updated_at?: string
+          voie: string
+          zone?: string | null
+        }
+        Update: {
+          capacite?: number | null
+          commune?: string
+          created_at?: string
+          faisabilite?: string | null
+          id?: string
+          identifiant_pco?: string | null
+          province?: string
+          quartier?: string
+          updated_at?: string
+          voie?: string
+          zone?: string | null
+        }
+        Relationships: []
       }
       msan_equipment: {
         Row: {
@@ -510,15 +552,15 @@ export type Database = {
     Functions: {
       ai_assign_technician: {
         Args: {
+          client_address?: string
           complaint_id: string
           complaint_type: string
           priority: string
-          client_address?: string
         }
         Returns: string
       }
       calculate_distance: {
-        Args: { lat1: number; lon1: number; lat2: number; lon2: number }
+        Args: { lat1: number; lat2: number; lon1: number; lon2: number }
         Returns: number
       }
       detect_client_zone: {
@@ -536,20 +578,20 @@ export type Database = {
       get_client_by_voip: {
         Args: { voip_num: string }
         Returns: {
-          id: string
-          client_number: string
-          voip_number: string
-          cin: string
-          name: string
           address: string
-          phone: string
+          cin: string
+          client_number: string
           email: string
+          id: string
+          name: string
+          phone: string
+          voip_number: string
         }[]
       }
       has_role: {
         Args: {
-          _user_id: string
           _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
         }
         Returns: boolean
       }
