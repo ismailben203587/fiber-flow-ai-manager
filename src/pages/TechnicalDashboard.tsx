@@ -7,7 +7,8 @@ import EquipmentMap from "@/components/EquipmentMap";
 import TechnicalOrders from "@/components/TechnicalOrders";
 import TechnicalReports from "@/components/TechnicalReports";
 import DashboardNavigation from "@/components/DashboardNavigation";
-import { Network, Router, MapPin, AlertCircle, Wrench, FileText } from "lucide-react";
+import { FeasibilityML } from "@/components/FeasibilityML";
+import { Network, Router, MapPin, AlertCircle, Wrench, FileText, Brain } from "lucide-react";
 
 interface TechnicalDashboardProps {
   onGoHome: () => void;
@@ -31,7 +32,7 @@ const TechnicalDashboard = ({ onGoHome }: TechnicalDashboardProps) => {
         <TechnicalStats />
 
         <Tabs defaultValue="orders" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6 glass-card">
+          <TabsList className="grid w-full grid-cols-7 glass-card">
             <TabsTrigger value="orders" className="data-[state=active]:gradient-primary data-[state=active]:text-white">
               <Wrench className="h-4 w-4 mr-2" />
               Études
@@ -47,6 +48,10 @@ const TechnicalDashboard = ({ onGoHome }: TechnicalDashboardProps) => {
             <TabsTrigger value="map" className="data-[state=active]:gradient-primary data-[state=active]:text-white">
               <MapPin className="h-4 w-4 mr-2" />
               Cartographie
+            </TabsTrigger>
+            <TabsTrigger value="ml" className="data-[state=active]:gradient-primary data-[state=active]:text-white">
+              <Brain className="h-4 w-4 mr-2" />
+              IA/ML
             </TabsTrigger>
             <TabsTrigger value="reports" className="data-[state=active]:gradient-primary data-[state=active]:text-white">
               <FileText className="h-4 w-4 mr-2" />
@@ -72,6 +77,10 @@ const TechnicalDashboard = ({ onGoHome }: TechnicalDashboardProps) => {
 
           <TabsContent value="map" className="space-y-6">
             <EquipmentMap />
+          </TabsContent>
+
+          <TabsContent value="ml" className="space-y-6">
+            <FeasibilityML />
           </TabsContent>
 
           <TabsContent value="reports" className="space-y-6">
