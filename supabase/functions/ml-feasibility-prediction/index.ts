@@ -396,8 +396,18 @@ serve(async (req) => {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
         });
 
+      case 'get_training_data':
+        const trainingData = predictor.getTrainingData();
+        
+        return new Response(JSON.stringify({
+          success: true,
+          data: trainingData
+        }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+
       default:
-        throw new Error('Invalid action. Use: train, predict, or batch_predict');
+        throw new Error('Invalid action. Use: train, predict, batch_predict, or get_training_data');
     }
 
   } catch (error) {
