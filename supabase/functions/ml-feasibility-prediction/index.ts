@@ -76,18 +76,31 @@ class SimpleFeasibilityPredictor {
   }
 
   private extractFeatures(row: CSVRow): FeatureVector {
+    // Valeurs par défaut pour éviter les erreurs
+    const province = row.Province || 'UNKNOWN';
+    const commune = row.COMMUNE || 'UNKNOWN';
+    const quartier = row.QUARTIER || 'UNKNOWN';
+    const zone = row.ZONE || 'UNKNOWN';
+    const voie = row.VOIE || '';
+    const capacite = parseInt(row.Capacité) || 8;
+    
     return {
-      province_encoded: this.encodeText(row.Province, this.provinceMap),
-      commune_encoded: this.encodeText(row.COMMUNE, this.communeMap),
-      quartier_encoded: this.encodeText(row.QUARTIER, this.quartierMap),
-      zone_encoded: this.encodeText(row.ZONE, this.zoneMap),
-      capacite: parseInt(row.Capacité) || 8,
-      geographical_score: this.calculateGeographicalScore(row.VOIE, row.QUARTIER)
+      province_encoded: this.encodeText(province, this.provinceMap),
+      commune_encoded: this.encodeText(commune, this.communeMap),
+      quartier_encoded: this.encodeText(quartier, this.quartierMap),
+      zone_encoded: this.encodeText(zone, this.zoneMap),
+      capacite: capacite,
+      geographical_score: this.calculateGeographicalScore(voie, quartier)
     };
   }
 
   private encodeFeasibilityLabel(faisablite: string): number {
-    switch (faisablite.toLowerCase()) {
+    if (!faisablite || typeof faisablite !== 'string') {
+      return 1; // Valeur par défaut: Faisable
+    }
+    
+    const cleanValue = faisablite.toLowerCase().trim();
+    switch (cleanValue) {
       case 'faisable': return 1;
       case 'non faisable': return 0;
       case 'etude': return 2;
@@ -97,19 +110,36 @@ class SimpleFeasibilityPredictor {
 
   parseCSV(csvContent: string): CSVRow[] {
     const lines = csvContent.trim().split('\n');
-    const headers = lines[0].split('\t');
+    if (lines.length === 0) {
+      throw new Error('CSV file is empty');
+    }
     
-    return lines.slice(1).map(line => {
-      const values = line.split('\t');
+    const headers = lines[0].split('\t').map(h => h.trim());
+    console.log('CSV Headers:', headers);
+    
+    const rows = lines.slice(1).map((line, index) => {
+      const values = line.split('\t').map(v => v?.trim() || '');
       const row: any = {};
-      headers.forEach((header, index) => {
-        row[header.trim()] = values[index]?.trim() || '';
+      
+      headers.forEach((header, headerIndex) => {
+        row[header] = values[headerIndex] || '';
       });
+      
+      // Validation des données importantes
+      if (!row['Province'] || !row['COMMUNE']) {
+        console.warn(`Row ${index + 2} missing required data:`, row);
+      }
+      
       return row as CSVRow;
-    });
+    }).filter(row => row['Province'] && row['COMMUNE']); // Filtrer les lignes invalides
+    
+    console.log(`Parsed ${rows.length} valid rows from CSV`);
+    return rows;
   }
 
   train(csvData: CSVRow[]): void {
+    console.log(`Training with ${csvData.length} rows`);
+    
     const trainingData: TrainingData = {
       features: [],
       labels: []
@@ -117,11 +147,22 @@ class SimpleFeasibilityPredictor {
 
     // Extraction des caractéristiques
     for (const row of csvData) {
-      const features = this.extractFeatures(row);
-      const label = this.encodeFeasibilityLabel(row.Faisablité);
-      
-      trainingData.features.push(features);
-      trainingData.labels.push(label);
+      try {
+        const features = this.extractFeatures(row);
+        const label = this.encodeFeasibilityLabel(row.Faisablité);
+        
+        trainingData.features.push(features);
+        trainingData.labels.push(label);
+      } catch (error) {
+        console.warn('Error processing row:', row, error);
+        continue; // Ignorer cette ligne et continuer
+      }
+    }
+
+    console.log(`Successfully processed ${trainingData.features.length} training examples`);
+    
+    if (trainingData.features.length === 0) {
+      throw new Error('No valid training data found');
     }
 
     // Entraînement simple avec régression logistique
