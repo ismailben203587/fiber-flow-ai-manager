@@ -261,6 +261,57 @@ class SimpleFeasibilityPredictor {
       throw new Error('Model not trained yet');
     }
 
+    // D'abord, vérifier si l'adresse exacte existe dans les données d'entraînement
+    const exactMatch = this.trainingData.find(row => 
+      row.Province?.toLowerCase().trim() === inputData.Province?.toLowerCase().trim() &&
+      row.COMMUNE?.toLowerCase().trim() === inputData.COMMUNE?.toLowerCase().trim() &&
+      row.QUARTIER?.toLowerCase().trim() === inputData.QUARTIER?.toLowerCase().trim() &&
+      row.VOIE?.toLowerCase().trim() === inputData.VOIE?.toLowerCase().trim()
+    );
+
+    if (exactMatch && exactMatch.Faisablité) {
+      const feasibilityStatus = exactMatch.Faisablité.toLowerCase().trim();
+      console.log('Exact match found with feasibility:', feasibilityStatus);
+      
+      if (feasibilityStatus === 'faisable') {
+        return {
+          feasibility: 'feasible',
+          confidence: 1.0,
+          details: {
+            method: 'exact_match',
+            source: 'training_data',
+            address: `${exactMatch.Province}, ${exactMatch.COMMUNE}, ${exactMatch.QUARTIER}, ${exactMatch.VOIE}`,
+            status: exactMatch.Faisablité
+          }
+        };
+      } else if (feasibilityStatus === 'non faisable') {
+        return {
+          feasibility: 'not_feasible',
+          confidence: 1.0,
+          details: {
+            method: 'exact_match',
+            source: 'training_data',
+            address: `${exactMatch.Province}, ${exactMatch.COMMUNE}, ${exactMatch.QUARTIER}, ${exactMatch.VOIE}`,
+            status: exactMatch.Faisablité
+          }
+        };
+      } else if (feasibilityStatus === 'etude') {
+        return {
+          feasibility: 'requires_study',
+          confidence: 1.0,
+          details: {
+            method: 'exact_match',
+            source: 'training_data',
+            address: `${exactMatch.Province}, ${exactMatch.COMMUNE}, ${exactMatch.QUARTIER}, ${exactMatch.VOIE}`,
+            status: exactMatch.Faisablité
+          }
+        };
+      }
+    }
+
+    // Si pas de correspondance exacte, utiliser le modèle ML pour prédire
+    console.log('No exact match found, using ML prediction');
+
     // Création d'une ligne complète avec des valeurs par défaut
     const row: CSVRow = {
       Province: inputData.Province || 'RABAT',
@@ -298,13 +349,13 @@ class SimpleFeasibilityPredictor {
     let confidence: number;
     
     if (probability > 0.7) {
-      feasibility = 'Faisable';
+      feasibility = 'feasible';
       confidence = probability;
     } else if (probability > 0.3) {
-      feasibility = 'Etude';
+      feasibility = 'requires_study';
       confidence = 0.6;
     } else {
-      feasibility = 'Non faisable';
+      feasibility = 'not_feasible';
       confidence = 1 - probability;
     }
     
@@ -312,6 +363,7 @@ class SimpleFeasibilityPredictor {
       feasibility,
       confidence: Math.round(confidence * 100) / 100,
       details: {
+        method: 'ml_prediction',
         raw_score: score,
         probability,
         geographical_score: features.geographical_score,
@@ -396,15 +448,6 @@ serve(async (req) => {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
         });
 
-      case 'get_training_data':
-        const trainingData = predictor.getTrainingData();
-        
-        return new Response(JSON.stringify({
-          success: true,
-          data: trainingData
-        }), {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        });
 
       default:
         throw new Error('Invalid action. Use: train, predict, batch_predict, or get_training_data');

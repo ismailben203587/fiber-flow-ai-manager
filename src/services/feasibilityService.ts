@@ -163,6 +163,98 @@ export class FeasibilityService {
     try {
       console.log('🔍 Début de l\'évaluation de faisabilité pour:', clientAddress);
 
+      // D'abord, essayer avec l'IA ML
+      try {
+        const addressParts = clientAddress.split(',').map(part => part.trim());
+        const mlInput = {
+          Province: addressParts[0] || '',
+          COMMUNE: addressParts[1] || '',
+          QUARTIER: addressParts[2] || '',
+          VOIE: addressParts[3] || clientAddress
+        };
+
+        console.log('🤖 Tentative de prédiction ML avec:', mlInput);
+
+        const mlResponse = await supabase.functions.invoke('ml-feasibility-prediction', {
+          body: { action: 'predict', data: mlInput }
+        });
+
+        if (mlResponse.data?.success && mlResponse.data?.prediction) {
+          const prediction = mlResponse.data.prediction;
+          console.log('🎯 Prédiction ML reçue:', prediction);
+
+          // Traiter les résultats ML
+          let isFeasible = false;
+          let riskLevel: 'low' | 'medium' | 'high' = 'medium';
+          let score = 50;
+          let factors: string[] = [];
+          let recommendations: string[] = [];
+
+          if (prediction.feasibility === 'feasible') {
+            isFeasible = true;
+            riskLevel = 'low';
+            score = Math.round(prediction.confidence * 100);
+            factors.push('✅ Adresse validée par le système ML');
+            recommendations.push('Installation approuvée automatiquement');
+            
+            if (prediction.details?.method === 'exact_match') {
+              factors.push('📋 Correspondance exacte trouvée dans les données d\'entraînement');
+              recommendations.push(`Statut: ${prediction.details.status}`);
+            }
+          } else if (prediction.feasibility === 'not_feasible') {
+            isFeasible = false;
+            riskLevel = 'high';
+            score = Math.round((1 - prediction.confidence) * 100);
+            factors.push('❌ Adresse rejetée par le système ML');
+            recommendations.push('Installation non recommandée');
+            
+            if (prediction.details?.method === 'exact_match') {
+              factors.push('📋 Correspondance exacte trouvée dans les données d\'entraînement');
+              recommendations.push(`Statut: ${prediction.details.status}`);
+            }
+          } else if (prediction.feasibility === 'requires_study') {
+            isFeasible = false; // Nécessite une étude technique
+            riskLevel = 'medium';
+            score = 60;
+            factors.push('🔍 Étude technique requise selon le système ML');
+            recommendations.push('Une évaluation technique détaillée est nécessaire');
+            
+            if (prediction.details?.method === 'exact_match') {
+              factors.push('📋 Correspondance exacte trouvée dans les données d\'entraînement');
+              recommendations.push(`Statut: ${prediction.details.status}`);
+            }
+          }
+
+          console.log('✅ Résultat ML:', { 
+            isFeasible, 
+            score, 
+            feasibility: prediction.feasibility,
+            method: prediction.details?.method
+          });
+
+          return {
+            isFeasible,
+            assignedPCO: null, // Les données ML ne contiennent pas d'assignation d'équipement
+            assignedMSAN: null,
+            distanceToPCO: null,
+            distanceToMSAN: null,
+            analysis: {
+              score,
+              factors,
+              recommendations,
+              riskLevel,
+            },
+          };
+        } else {
+          console.log('⚠️ Prédiction ML échouée, passage en mode classique');
+        }
+      } catch (mlError) {
+        console.log('⚠️ Erreur ML, passage en mode classique:', mlError);
+      }
+
+      // Si la prédiction ML a échoué, utiliser l'ancienne logique
+      console.log('🔄 Utilisation de l\'évaluation classique');
+
       // Get client coordinates
       const clientCoords = await this.geocodeAddress(clientAddress);
       if (!clientCoords) {
@@ -204,7 +296,7 @@ export class FeasibilityService {
                         this.analyzeCapacity(nearestPCO.equipment).hasCapacity &&
                         this.analyzeCapacity(nearestMSAN.equipment).hasCapacity;
 
-      console.log('✅ Résultat de faisabilité:', { isFeasible, score: analysis.score });
+      console.log('✅ Résultat de faisabilité classique:', { isFeasible, score: analysis.score });
 
       return {
         isFeasible: Boolean(isFeasible),
