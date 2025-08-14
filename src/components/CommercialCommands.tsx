@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useCreateFTTHOrder } from '@/hooks/useOrders';
 import { useClientByCin } from '@/hooks/useClients';
 import VoipClientLookup from './VoipClientLookup';
+import StructuredAddressInput from './StructuredAddressInput';
 
 const CommercialCommands = () => {
   const { toast } = useToast();
@@ -23,6 +24,25 @@ const CommercialCommands = () => {
     clientCin: '',
     serviceType: 'FTTH'
   });
+
+  // Fonction pour générer un email basé sur le nom
+  const generateEmailFromName = (name: string) => {
+    if (!name.trim()) return '';
+    
+    const cleanName = name.toLowerCase()
+      .replace(/[^a-z\s]/g, '') // Enlever les caractères spéciaux
+      .trim()
+      .split(' ')
+      .filter(part => part.length > 0)
+      .slice(0, 2) // Prendre max 2 parties du nom
+      .join('.');
+    
+    const domains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com'];
+    const randomDomain = domains[Math.floor(Math.random() * domains.length)];
+    const randomNumber = Math.floor(Math.random() * 999) + 1;
+    
+    return `${cleanName}${randomNumber}@${randomDomain}`;
+  };
 
   const [searchMode, setSearchMode] = useState(false);
   const [existingClient, setExistingClient] = useState<any>(null);
@@ -137,7 +157,7 @@ const CommercialCommands = () => {
       clientName: client.name,
       clientAddress: client.address,
       clientPhone: client.phone || '',
-      clientEmail: client.email || '',
+      clientEmail: client.email || generateEmailFromName(client.name),
       clientCin: client.cin,
       serviceType: 'FTTH'
     });
@@ -147,6 +167,18 @@ const CommercialCommands = () => {
       title: "Client trouvé",
       description: "Les informations du client ont été pré-remplies",
     });
+  };
+
+  // Générer automatiquement l'email quand le nom change
+  const handleNameChange = (name: string) => {
+    const updates: any = { clientName: name };
+    
+    // Si pas d'email déjà saisi et pas de client existant, générer un email
+    if (!newOrder.clientEmail && !existingClient && name.trim()) {
+      updates.clientEmail = generateEmailFromName(name);
+    }
+    
+    setNewOrder({ ...newOrder, ...updates });
   };
 
   const handleClientNotFound = () => {
@@ -253,7 +285,7 @@ const CommercialCommands = () => {
               <Input
                 id="clientName"
                 value={newOrder.clientName}
-                onChange={(e) => setNewOrder({ ...newOrder, clientName: e.target.value })}
+                onChange={(e) => handleNameChange(e.target.value)}
                 placeholder="Nom complet du client"
                 disabled={!!existingClient}
               />
@@ -277,11 +309,10 @@ const CommercialCommands = () => {
             <Label htmlFor="clientAddress" className="flex items-center gap-1">
               Adresse <span className="text-red-500">*</span>
             </Label>
-            <Input
-              id="clientAddress"
+            <StructuredAddressInput
               value={newOrder.clientAddress}
-              onChange={(e) => setNewOrder({ ...newOrder, clientAddress: e.target.value })}
-              placeholder="Adresse complète d'installation"
+              onChange={(address) => setNewOrder({ ...newOrder, clientAddress: address })}
+              disabled={false}
             />
           </div>
 
@@ -303,8 +334,19 @@ const CommercialCommands = () => {
                 type="email"
                 value={newOrder.clientEmail}
                 onChange={(e) => setNewOrder({ ...newOrder, clientEmail: e.target.value })}
-                placeholder="Adresse email"
+                placeholder="Email généré automatiquement ou saisie manuelle"
               />
+              {newOrder.clientName && !existingClient && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setNewOrder({ ...newOrder, clientEmail: generateEmailFromName(newOrder.clientName) })}
+                  className="text-xs"
+                >
+                  Générer email automatique
+                </Button>
+              )}
             </div>
           </div>
 

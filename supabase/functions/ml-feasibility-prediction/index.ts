@@ -41,6 +41,11 @@ class SimpleFeasibilityPredictor {
   private weights: number[] = [];
   private bias: number = 0;
   private isTrained: boolean = false;
+  private trainingData: CSVRow[] = [];
+
+  getTrainingData(): CSVRow[] {
+    return this.trainingData;
+  }
 
   private encodeText(text: string, map: Map<string, number>): number {
     if (!map.has(text)) {
@@ -167,6 +172,9 @@ class SimpleFeasibilityPredictor {
 
   train(csvData: CSVRow[]): void {
     console.log(`Training with ${csvData.length} rows`);
+    
+    // Store training data
+    this.trainingData = csvData;
     
     const trainingData: TrainingData = {
       features: [],
@@ -321,7 +329,23 @@ serve(async (req) => {
   }
 
   try {
-    const { action, data, csvContent } = await req.json();
+    const body = await req.json();
+    const { action, data, csvContent, addresses } = body;
+    
+    // Handle get training data request
+    if (action === 'get_training_data') {
+      return new Response(
+        JSON.stringify({ 
+          success: true, 
+          data: predictor.getTrainingData(),
+          message: `${predictor.getTrainingData()?.length || 0} addresses available`
+        }),
+        { 
+          headers: { 'Content-Type': 'application/json', ...corsHeaders },
+          status: 200 
+        }
+      );
+    }
 
     switch (action) {
       case 'train':
