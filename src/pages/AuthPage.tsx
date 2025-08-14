@@ -13,6 +13,7 @@ import aiBackground from '@/assets/ai-background.jpg';
 export function AuthPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [loginForm, setLoginForm] = useState({ email: '', password: '' });
+  const [creatingUsers, setCreatingUsers] = useState(false);
   const { signIn } = useAuth();
   const { toast } = useToast();
 
@@ -43,6 +44,34 @@ export function AuthPage() {
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const createDemoUsers = async () => {
+    setCreatingUsers(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('create-demo-users');
+      
+      if (error) {
+        toast({
+          variant: 'destructive',
+          title: 'Erreur',
+          description: 'Impossible de créer les utilisateurs de démonstration.',
+        });
+      } else {
+        toast({
+          title: 'Succès',
+          description: 'Utilisateurs de démonstration créés/mis à jour avec succès.',
+        });
+      }
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Erreur',
+        description: 'Une erreur inattendue s\'est produite.',
+      });
+    } finally {
+      setCreatingUsers(false);
     }
   };
 
@@ -122,6 +151,30 @@ export function AuthPage() {
                     {isLoading ? 'Connexion...' : 'Se connecter'}
                   </Button>
                 </form>
+                
+                <div className="mt-4 pt-4 border-t border-neural-blue/20">
+                  <Button 
+                    onClick={createDemoUsers}
+                    variant="outline"
+                    className="w-full border-neural-blue/30 text-neural-blue hover:bg-neural-blue/10" 
+                    disabled={creatingUsers}
+                  >
+                    {creatingUsers ? 'Création...' : 'Créer les utilisateurs de démonstration'}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+            
+            {/* Demo credentials */}
+            <Card className="mt-4 border border-neural-blue/20 bg-neural-dark/30 backdrop-blur-xl">
+              <CardContent className="p-4">
+                <h3 className="text-neural-blue font-medium mb-3 text-sm">Identifiants de démonstration :</h3>
+                <div className="space-y-2 text-xs text-neural-blue/70">
+                  <div>• Admin : admin@ftth.ma / password123</div>
+                  <div>• Commercial : commercial@ftth.ma / password123</div>
+                  <div>• Service Technique : tech@ftth.ma / password123</div>
+                  <div>• Technicien : supervisor@ftth.ma / password123</div>
+                </div>
               </CardContent>
             </Card>
 
