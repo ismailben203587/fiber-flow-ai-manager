@@ -44,12 +44,18 @@ const StructuredAddressInput: React.FC<StructuredAddressInputProps> = ({
   const loadMLAddresses = async () => {
     setIsLoading(true);
     try {
+      console.log('Chargement des adresses ML...');
       const response = await supabase.functions.invoke('ml-feasibility-prediction', {
         body: { action: 'get_training_data' }
       });
       
-      if (response.data?.data) {
+      console.log('Réponse ML:', response);
+      
+      if (response.data?.success && response.data?.data) {
+        console.log('Données ML reçues:', response.data.data.length, 'adresses');
         setMlAddresses(response.data.data);
+      } else {
+        console.error('Erreur dans la réponse ML:', response.data);
       }
     } catch (error) {
       console.error('Error loading ML addresses:', error);
