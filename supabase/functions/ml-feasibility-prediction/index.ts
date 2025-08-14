@@ -12,7 +12,7 @@ interface CSVRow {
   COMMUNE: string;
   QUARTIER: string;
   VOIE: string;
-  géographique: string;
+  géographique?: string;
   ZONE: string;
   'Identifiant PCO': string;
   Capacité: string;
@@ -100,11 +100,15 @@ class SimpleFeasibilityPredictor {
     }
     
     const cleanValue = faisablite.toLowerCase().trim();
+    console.log('Encoding feasibility:', cleanValue);
+    
     switch (cleanValue) {
       case 'faisable': return 1;
       case 'non faisable': return 0;
       case 'etude': return 2;
-      default: return 1;
+      default: 
+        console.warn('Unknown feasibility value:', faisablite);
+        return 1;
     }
   }
 
@@ -114,26 +118,50 @@ class SimpleFeasibilityPredictor {
       throw new Error('CSV file is empty');
     }
     
-    const headers = lines[0].split('\t').map(h => h.trim());
-    console.log('CSV Headers:', headers);
+    // Détecter le séparateur (virgule, point-virgule ou tabulation)
+    const firstLine = lines[0];
+    let separator = ',';
+    if (firstLine.includes(';')) {
+      separator = ';';
+    } else if (firstLine.includes('\t')) {
+      separator = '\t';
+    }
+    
+    console.log('CSV separator detected:', separator);
+    
+    const headers = lines[0].split(separator).map(h => h.trim().replace(/[^\w\s]/g, ''));
+    console.log('CSV Headers cleaned:', headers);
+    
+    // Mapping des noms de colonnes avec problèmes d'encodage
+    const headerMapping: { [key: string]: string } = {
+      'gographique': 'géographique',
+      'géographique': 'géographique',
+      'Capacit': 'Capacité',
+      'Capacité': 'Capacité', 
+      'Faisablit': 'Faisablité',
+      'Faisablité': 'Faisablité'
+    };
     
     const rows = lines.slice(1).map((line, index) => {
-      const values = line.split('\t').map(v => v?.trim() || '');
+      const values = line.split(separator).map(v => v?.trim().replace(/\r$/, '') || '');
       const row: any = {};
       
       headers.forEach((header, headerIndex) => {
-        row[header] = values[headerIndex] || '';
+        const cleanHeader = headerMapping[header] || header;
+        row[cleanHeader] = values[headerIndex] || '';
       });
       
       // Validation des données importantes
       if (!row['Province'] || !row['COMMUNE']) {
         console.warn(`Row ${index + 2} missing required data:`, row);
+        return null;
       }
       
       return row as CSVRow;
-    }).filter(row => row['Province'] && row['COMMUNE']); // Filtrer les lignes invalides
+    }).filter(row => row !== null); // Filtrer les lignes invalides
     
     console.log(`Parsed ${rows.length} valid rows from CSV`);
+    console.log('Sample row:', rows[0]);
     return rows;
   }
 
